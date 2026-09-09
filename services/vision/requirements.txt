@@ -1,0 +1,17 @@
+# AEGIS vision service
+#
+# Base — enough to run the service with the classical segmentation baseline.
+fastapi>=0.115
+uvicorn[standard]>=0.32
+python-multipart>=0.0.9
+pillow>=10.4
+numpy>=1.26
+
+# Detection — real, pretrained, CPU-capable. Person/animal/vehicle counting
+# works with no training at all.
+ultralytics>=8.3
+
+# Segmentation — U-Net inference and training.
+# CPU wheels are the default. For CUDA, install from pytorch.org first, e.g.
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
+torch>=2.4

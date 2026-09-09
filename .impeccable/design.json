@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-08T00:00:00.000Z",
+  "title": "Design System: AEGIS",
+  "extensions": {
+    "colorMeta": {
+      "stamp": {
+        "role": "primary",
+        "displayName": "Stamp-Pad Violet",
+        "canonical": "#5b2d8e",
+        "darkValue": "#a97ce8",
+        "tonalRamp": ["#170a24", "#241038", "#331750", "#452069", "#5b2d8e", "#7a4ec0", "#a97ce8", "#dcc9f5"]
+      },
+      "tape": {
+        "role": "secondary",
+        "displayName": "Red-Tape Crimson",
+        "canonical": "#b4232a",
+        "darkValue": "#ea666b",
+        "tonalRamp": ["#2a0709", "#450b0f", "#5f1015", "#8a181d", "#b4232a", "#d64349", "#ea666b", "#f8c2c4"]
+      },
+      "seal": {
+        "role": "secondary",
+        "displayName": "File Green",
+        "canonical": "#0f5c4a",
+        "darkValue": "#3fbf9b",
+        "tonalRamp": ["#04180f", "#062a1f", "#08402f", "#0b4e3d", "#0f5c4a", "#1c8a6e", "#3fbf9b", "#a9e6d5"]
+      },
+      "pencil": {
+        "role": "secondary",
+        "displayName": "Blue Pencil",
+        "canonical": "#3a5a7c",
+        "darkValue": "#7aa8d0",
+        "tonalRamp": ["#0c141c", "#16232f", "#213546", "#2d465f", "#3a5a7c", "#54809f", "#7aa8d0", "#c4dcee"]
+      },
+      "sim": {
+        "role": "tertiary",
+        "displayName": "Plum Provenance",
+        "canonical": "#a3206b",
+        "darkValue": "#f28ac6",
+        "tonalRamp": ["#26071a", "#3d0b28", "#5c1039", "#801850", "#a3206b", "#cc4a92", "#f28ac6", "#fbd3e7"]
+      },
+      "warn": {
+        "role": "tertiary",
+        "displayName": "Ledger Amber",
+        "canonical": "#785710",
+        "darkValue": "#d8a63a",
+        "tonalRamp": ["#1c1304", "#2f2007", "#46320b", "#5d420e", "#785710", "#a97c1c", "#d8a63a", "#efd79c"]
+      },
+      "halt": {
+        "role": "tertiary",
+        "displayName": "Halt Signal",
+        "canonical": "#b8202c",
+        "darkValue": "#ff5a63",
+        "tonalRamp": ["#2b0508", "#48090e", "#650d15", "#8f161f", "#b8202c", "#df3a45", "#ff5a63", "#ffbfc3"]
+      },
+      "water": {
+        "role": "tertiary",
+        "displayName": "Survey Blue",
+        "canonical": "#1d6088",
+        "darkValue": "#4d94c4",
+        "tonalRamp": ["#061520", "#0a2334", "#0f3a52", "#154c6d", "#1d6088", "#2f7cab", "#4d94c4", "#b3d6ea"]
+      },
+      "sev-clear": { "role": "tertiary", "displayName": "Clear", "canonical": "#84958f", "darkValue": "#697872", "tonalRamp": ["#161a19", "#242b28", "#374039", "#4c5852", "#647069", "#84958f", "#a9b7b2", "#d9e2df"] },
+      "sev-monitor": { "role": "tertiary", "displayName": "Monitor", "canonical": "#d9ae3c", "darkValue": "#87801f", "tonalRamp": ["#241b04", "#3a2c08", "#54400d", "#6e5412", "#8c6b18", "#b28921", "#d9ae3c", "#f0dda1"] },
+      "sev-elevated": { "role": "tertiary", "displayName": "Elevated", "canonical": "#ce8617", "darkValue": "#d6ae24", "tonalRamp": ["#231403", "#3a2205", "#543109", "#6e400c", "#8d5310", "#ad6813", "#ce8617", "#eec48a"] },
+      "sev-severe": { "role": "tertiary", "displayName": "Severe", "canonical": "#be5010", "darkValue": "#e5613a", "tonalRamp": ["#210c02", "#371504", "#4f1e06", "#6a2909", "#8c360b", "#a5410e", "#be5010", "#e8a882"] },
+      "sev-critical": { "role": "tertiary", "displayName": "Critical", "canonical": "#96161d", "darkValue": "#ff97a4", "tonalRamp": ["#210407", "#37070b", "#4e0a0f", "#6a0e14", "#96161d", "#c02830", "#e05a62", "#f6b8bd"] },
+      "jacket": { "role": "neutral", "displayName": "File Jacket", "canonical": "#d9ddd2", "darkValue": "#0d1116", "tonalRamp": ["#0d1116", "#1a2029", "#2a323a", "#48524c", "#6e7970", "#97a292", "#c2cabb", "#f3f5ef"] },
+      "sheet": { "role": "neutral", "displayName": "Noting Sheet", "canonical": "#f3f5ef", "darkValue": "#141a20", "tonalRamp": ["#0f151a", "#141a20", "#1a222a", "#3f4b45", "#53605a", "#c2cabb", "#e9ece3", "#fafbf7"] },
+      "ink": { "role": "neutral", "displayName": "File Ink", "canonical": "#16211c", "darkValue": "#e3e9e4", "tonalRamp": ["#0a0f0c", "#16211c", "#28352f", "#3f4b45", "#53605a", "#7f8c86", "#b3bdb7", "#e3e9e4"] },
+      "rule": { "role": "neutral", "displayName": "Ledger Rule", "canonical": "#c2cabb", "darkValue": "#2a343c", "tonalRamp": ["#202930", "#2a343c", "#3d4a53", "#5c675e", "#7d8a7a", "#97a292", "#c2cabb", "#d6dccf"] },
+      "control-edge": { "role": "neutral", "displayName": "Control Edge", "canonical": "#6b786d", "darkValue": "#647178", "tonalRamp": ["#161a17", "#232823", "#333c34", "#475047", "#5a655b", "#6b786d", "#96a297", "#cfd6d0"] }
+    },
+    "typographyMeta": {
+      "masthead": { "displayName": "Masthead", "purpose": "The AEGIS wordmark on the file's cover line only." },
+      "display": { "displayName": "Display", "purpose": "One page title per screen, in PageHead. Never preceded by an eyebrow." },
+      "headline": { "displayName": "Headline", "purpose": "Record titles inside a register row." },
+      "title": { "displayName": "Title", "purpose": "Sheet heads sitting on the rule above a field block." },
+      "body": { "displayName": "Body", "purpose": "Standfirsts and explanatory prose, capped at 70-72ch." },
+      "body-dense": { "displayName": "Body Dense", "purpose": "Register cells, marginal notes, empty-state copy." },
+      "figure": { "displayName": "Figure", "purpose": "Every value in a field row. Tabular lining numerals, always." },
+      "label": { "displayName": "Label", "purpose": "Column heads and field labels, letterspaced caps." },
+      "micro-label": { "displayName": "Micro Label", "purpose": "Band chips, provenance marks, status labels, stage numbers." },
+      "rail": { "displayName": "Rail", "purpose": "Margin serials, file numbers, hint lines — the numbered margin of the register." },
+      "devanagari": { "displayName": "Devanagari", "purpose": "Hindi field instructions; the dispatch is bilingual, so the type must be." }
+    },
+    "shadows": [
+      { "name": "shadow-1", "value": "0 1px 2px #16211c14, 0 2px 6px #16211c0f", "purpose": "The only ambient shadow. Lifts .sheet-raised a millimetre off the board." },
+      { "name": "shadow-1-dark", "value": "0 1px 2px #00000059, 0 2px 8px #0000003d", "purpose": "Night-ground equivalent of shadow-1." },
+      { "name": "stamp-shadow", "value": "0 1px 1px #5b2d8e33", "purpose": "Under the stamp impression only; day ground. Night: 0 1px 2px #a97ce833." },
+      { "name": "pressed", "value": "inset 0 1px 2px #16211c1f", "purpose": "Active state of .btn — the sheet taking pressure, not a lift." },
+      { "name": "band-edge", "value": "inset 2px 0 0 var(--band)", "purpose": "The severity edge rule, carried as an inset shadow so it sits inside the 1px border." },
+      { "name": "focus-halo", "value": "0 0 0 2px var(--stamp-soft)", "purpose": "Input focus halo, paired with a stamp-violet border." }
+    ],
+    "motion": [
+      { "name": "ease-file", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The system's one easing curve — stamp landing (480ms), rule-draw (520ms), bar scaleX (260ms)." },
+      { "name": "ease-control", "value": "120ms ease-out", "purpose": "Button background, border and colour transitions." },
+      { "name": "stamp-land", "value": "480ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The impression drop: scale 1.5 with 3px blur to a 1.015 overshoot, settling at 0.92 opacity." },
+      { "name": "hold-to-stamp", "value": "750ms", "purpose": "Approval hold duration. Degrades to a single press under prefers-reduced-motion." },
+      { "name": "pulse-live", "value": "1.9s ease-in-out infinite", "purpose": "Live status dot; opacity 1 to 0.32." },
+      { "name": "chase", "value": "900ms linear infinite", "purpose": "Marching dash on the in-progress stage connector." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "container-max", "value": "110rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "The default control: square, hairline-bordered, letterspaced narrow caps.",
+      "html": "<button class=\"ds-btn\">Open pipeline</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4375rem; padding: 0.4375rem 0.8125rem; border: 1px solid var(--control-edge, #6b786d); border-radius: 0; background: var(--sheet-raised, #fafbf7); color: var(--ink, #16211c); font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; cursor: pointer; transition: background 120ms ease-out, border-color 120ms ease-out, color 120ms ease-out; } .ds-btn:hover { border-color: var(--ink-2, #3f4b45); background: var(--sheet-sunk, #e9ece3); } .ds-btn:active { background: var(--sheet-sunk, #e9ece3); box-shadow: inset 0 1px 2px #16211c1f; } .ds-btn:focus-visible { outline: 2px solid var(--focus, #5b2d8e); outline-offset: 2px; border-radius: 1px; } .ds-btn:disabled { opacity: 0.42; cursor: not-allowed; }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid ink on the sheet — one per surface, for the action that advances the file.",
+      "html": "<button class=\"ds-btn-primary\">Run pipeline</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.4375rem; padding: 0.4375rem 0.8125rem; border: 1px solid var(--ink, #16211c); border-radius: 0; background: var(--ink, #16211c); color: var(--sheet, #f3f5ef); font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; cursor: pointer; transition: background 120ms ease-out, border-color 120ms ease-out; } .ds-btn-primary:hover { background: var(--ink-2, #3f4b45); border-color: var(--ink-2, #3f4b45); } .ds-btn-primary:active { box-shadow: inset 0 1px 2px #16211c1f; } .ds-btn-primary:focus-visible { outline: 2px solid var(--focus, #5b2d8e); outline-offset: 2px; border-radius: 1px; }"
+    },
+    {
+      "name": "Stamp Button",
+      "kind": "button",
+      "refersTo": "button-stamp",
+      "description": "Hold to stamp. Approval is the one irreversible act, so it asks for a deliberate gesture; the violet rule fills along the foot over 750ms.",
+      "html": "<button class=\"ds-btn-stamp\"><svg width=\"13\" height=\"13\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.25\" stroke-linecap=\"square\" stroke-linejoin=\"miter\"><path d=\"M2.5 13.5h11\"/><path d=\"M3.6 11.4h8.8v1.4H3.6z\"/><path d=\"M6 11.4V8.6a1.6 1.6 0 0 0-.5-1.2 3 3 0 1 1 5 0 1.6 1.6 0 0 0-.5 1.2v2.8\"/></svg>Hold to stamp<span class=\"ds-btn-stamp-fill\" aria-hidden=\"true\"></span></button>",
+      "css": ".ds-btn-stamp { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 0.4375rem; padding: 0.4375rem 0.8125rem; border: 1px solid var(--stamp, #5b2d8e); border-radius: 0; background: var(--sheet-raised, #fafbf7); color: var(--stamp, #5b2d8e); font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; cursor: pointer; transition: background 120ms ease-out; } .ds-btn-stamp:hover { background: #5b2d8e26; } .ds-btn-stamp:focus-visible { outline: 2px solid var(--focus, #5b2d8e); outline-offset: 2px; border-radius: 1px; } .ds-btn-stamp-fill { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--stamp, #5b2d8e); transform: scaleX(0); transform-origin: left; transition: transform 140ms ease-out; } .ds-btn-stamp:active .ds-btn-stamp-fill { transform: scaleX(1); transition: transform 750ms linear; }"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A form field with a stepped-up bottom rule — the writing line — and a violet focus halo.",
+      "html": "<input class=\"ds-input\" placeholder=\"Zone id or settlement\" />",
+      "css": ".ds-input { width: 100%; padding: 0.4375rem 0.625rem; background: var(--sheet-raised, #fafbf7); border: 1px solid var(--rule, #c2cabb); border-bottom-color: var(--rule-strong, #97a292); border-radius: 0; color: var(--ink, #16211c); font-family: 'Azeret Mono', ui-monospace, monospace; font-size: 0.8125rem; font-variant-numeric: tabular-nums lining-nums; } .ds-input::placeholder { color: var(--ink-4, #616e68); } .ds-input:focus { border-color: var(--stamp, #5b2d8e); outline: none; box-shadow: 0 0 0 2px #5b2d8e26; }"
+    },
+    {
+      "name": "Sheet",
+      "kind": "card",
+      "refersTo": "sheet",
+      "description": "The container primitive. Not a card: a ruled sheet with registration ticks at two corners and a head sitting on the rule.",
+      "html": "<section class=\"ds-sheet\"><header class=\"ds-sheet-head\"><h2>Priority register</h2><span class=\"ds-sheet-meta\">S.No. 001–012</span></header><div class=\"ds-sheet-row\"><span class=\"ds-field-label\">Zone</span><span class=\"ds-field-value\">D-47</span></div><div class=\"ds-sheet-row\"><span class=\"ds-field-label\">Severity index</span><span class=\"ds-field-value\">87.4</span></div></section>",
+      "css": ".ds-sheet { position: relative; background: var(--sheet, #f3f5ef); border: 1px solid var(--rule, #c2cabb); border-radius: 0; } .ds-sheet::before, .ds-sheet::after { content: ''; position: absolute; width: 7px; height: 7px; border-color: var(--rule-strong, #97a292); border-style: solid; pointer-events: none; } .ds-sheet::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; } .ds-sheet::after { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; } .ds-sheet-head { display: flex; align-items: baseline; gap: 0.75rem; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule, #c2cabb); } .ds-sheet-head h2 { margin: 0; font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink, #16211c); } .ds-sheet-meta { margin-left: auto; font-family: 'Azeret Mono', ui-monospace, monospace; font-size: 0.625rem; letter-spacing: 0.02em; color: var(--ink-3, #53605a); font-variant-numeric: tabular-nums; } .ds-sheet-row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; padding: 0.4375rem 0.75rem; border-bottom: 1px solid var(--rule-soft, #d6dccf); } .ds-sheet-row:last-child { border-bottom: 0; } .ds-field-label { font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 0.625rem; font-weight: 600; letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink-3, #53605a); } .ds-field-value { font-family: 'Azeret Mono', ui-monospace, monospace; font-size: 0.8125rem; color: var(--ink, #16211c); font-variant-numeric: tabular-nums lining-nums; }"
+    },
+    {
+      "name": "Band Chip",
+      "kind": "chip",
+      "refersTo": "band-chip",
+      "description": "Severity, carried in a 1px border and a 2px left inset edge. The label itself is always ink — the ramp never colours text.",
+      "html": "<span class=\"ds-chip ds-chip-critical\">Critical</span> <span class=\"ds-chip ds-chip-severe\">Severe</span> <span class=\"ds-chip ds-chip-monitor\">Monitor</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 0.3125rem; padding: 0.0625rem 0.375rem; border: 1px solid var(--rule-strong, #97a292); border-radius: 0; color: var(--ink, #16211c); font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 0.5625rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; } .ds-chip-critical { border-color: var(--sev-critical, #96161d); box-shadow: inset 2px 0 0 var(--sev-critical, #96161d); } .ds-chip-severe { border-color: var(--sev-severe, #be5010); box-shadow: inset 2px 0 0 var(--sev-severe, #be5010); } .ds-chip-monitor { border-color: var(--sev-monitor, #d9ae3c); box-shadow: inset 2px 0 0 var(--sev-monitor, #d9ae3c); }"
+    },
+    {
+      "name": "Phase Rail Navigation",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "One unbroken line of the disaster phases. Never wraps — it scrolls. Active item takes a 2px violet underline.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Disaster phase\"><a class=\"ds-nav-item ds-nav-active\" href=\"#\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.25\" stroke-linecap=\"square\" stroke-linejoin=\"miter\"><path d=\"M2 2h12v12H2z\"/><path d=\"M6 2v12M10 2v12M2 6h12M2 10h12\"/></svg>Situation</a><span class=\"ds-nav-div\"></span><span class=\"ds-nav-phase\">During</span><a class=\"ds-nav-item\" href=\"#\">Response pipeline</a><a class=\"ds-nav-item\" href=\"#\">Drone console</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: stretch; overflow-x: auto; border-top: 1px solid var(--rule, #c2cabb); background: var(--jacket, #d9ddd2); padding: 0 0.75rem; } .ds-nav-item { display: flex; flex-shrink: 0; align-items: center; gap: 0.375rem; padding: 0.375rem 0.625rem; border-bottom: 2px solid transparent; color: var(--ink-3, #53605a); text-decoration: none; font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 0.625rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; } .ds-nav-item:hover { color: var(--ink, #16211c); } .ds-nav-item:focus-visible { outline: 2px solid var(--focus, #5b2d8e); outline-offset: -2px; } .ds-nav-active { border-bottom-color: var(--stamp, #5b2d8e); color: var(--ink, #16211c); } .ds-nav-div { width: 1px; flex-shrink: 0; margin: 0.375rem 0.375rem; background: var(--rule, #c2cabb); } .ds-nav-phase { display: flex; align-items: center; padding-right: 0.5rem; font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--stamp, #5b2d8e); }"
+    },
+    {
+      "name": "Stamp Impression",
+      "kind": "custom",
+      "refersTo": "stamp-impression",
+      "description": "The signed mark. Double-ruled violet, rotated -6deg, multiplied into the sheet so it reads as ink on the page.",
+      "html": "<span class=\"ds-stamp\"><span class=\"ds-stamp-line\">Approved</span><span class=\"ds-stamp-sub\">DDMA · 04:12 IST</span></span>",
+      "css": ".ds-stamp { display: inline-flex; flex-direction: column; align-items: center; gap: 0.125rem; padding: 0.5rem 1rem; border: 2px solid var(--stamp, #5b2d8e); border-radius: 0; box-shadow: inset 0 0 0 1px var(--stamp, #5b2d8e), 0 1px 1px #5b2d8e33; color: var(--stamp, #5b2d8e); font-family: 'Archivo Narrow', Archivo, sans-serif; text-transform: uppercase; letter-spacing: 0.16em; transform: rotate(-6deg); mix-blend-mode: multiply; opacity: 0.92; animation: ds-stamp-land 480ms cubic-bezier(0.16, 1, 0.3, 1) both; } .ds-stamp-line { font-size: 0.8125rem; font-weight: 700; } .ds-stamp-sub { font-family: 'Azeret Mono', ui-monospace, monospace; font-size: 0.5rem; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; } @keyframes ds-stamp-land { 0% { transform: rotate(-6deg) scale(1.5) translateY(-14px); opacity: 0; filter: blur(3px); } 55% { transform: rotate(-6deg) scale(0.97) translateY(0); opacity: 1; filter: blur(0); } 70% { transform: rotate(-6deg) scale(1.015); } 100% { transform: rotate(-6deg) scale(1); opacity: 0.92; } } @media (prefers-reduced-motion: reduce) { .ds-stamp { animation: none; } }"
+    },
+    {
+      "name": "Stage Rail",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The five-stage progress rail: square outline boxes, drawn connectors, a marching dash on the stage in progress.",
+      "html": "<ol class=\"ds-rail\"><li class=\"ds-rail-stage ds-rail-done\"><span class=\"ds-rail-box\">1</span><span class=\"ds-rail-label\">Assess</span></li><span class=\"ds-rail-link ds-rail-link-done\"></span><li class=\"ds-rail-stage ds-rail-now\"><span class=\"ds-rail-box\">2</span><span class=\"ds-rail-label\">Verify</span></li><span class=\"ds-rail-link\"></span><li class=\"ds-rail-stage\"><span class=\"ds-rail-box\">3</span><span class=\"ds-rail-label\">Allocate</span></li></ol>",
+      "css": ".ds-rail { display: flex; align-items: stretch; gap: 0; list-style: none; margin: 0; padding: 0; } .ds-rail-stage { display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0.625rem; border-bottom: 2px solid transparent; color: var(--ink-3, #53605a); } .ds-rail-box { display: flex; width: 20px; height: 20px; flex-shrink: 0; align-items: center; justify-content: center; border: 1px solid currentColor; border-radius: 0; font-family: 'Azeret Mono', ui-monospace, monospace; font-size: 0.5625rem; font-weight: 600; font-variant-numeric: tabular-nums; } .ds-rail-label { font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; } .ds-rail-done { color: var(--seal, #0f5c4a); } .ds-rail-now { color: var(--stamp, #5b2d8e); border-bottom-color: var(--stamp, #5b2d8e); } .ds-rail-link { align-self: center; width: 18px; height: 1px; margin: 0 0.375rem; background: var(--rule, #c2cabb); } .ds-rail-link-done { background: var(--rule-strong, #97a292); }"
+    },
+    {
+      "name": "Marginal Note",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "A notice in the register's own voice: a 1px left rule and a drawn mark, never a coloured slab.",
+      "html": "<p class=\"ds-note ds-note-warn\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.25\" stroke-linecap=\"square\" stroke-linejoin=\"miter\"><path d=\"M8 1.8 15 14H1L8 1.8Z\"/><path d=\"M8 6v4M8 11.6v0.6\"/></svg><span>No reasoning credentials on this deployment — deterministic rule engines produce every recommendation.</span></p>",
+      "css": ".ds-note { display: flex; align-items: flex-start; gap: 0.5rem; margin: 0; padding: 0.5rem 0.75rem; border-left: 1px solid var(--ink-3, #53605a); color: var(--ink-2, #3f4b45); font-family: Archivo, ui-sans-serif, sans-serif; font-size: 0.75rem; line-height: 1.5; } .ds-note svg { margin-top: 0.15rem; flex-shrink: 0; color: var(--ink-3, #53605a); } .ds-note-warn { border-left-color: var(--warn, #785710); } .ds-note-warn svg { color: var(--warn, #785710); } .ds-note-halt { border-left-color: var(--halt, #b8202c); } .ds-note-halt svg { color: var(--halt, #b8202c); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Signed Order",
+    "overview": "AEGIS is drawn as an Indian district file translated into a screen grammar, not as a dashboard. The product of the system is a signed, auditable order, so the interface is the document that carries it: ruled columns, hairline rules, a numbered margin rail on every register, and a stamp that lands on the sheet as an impression rather than a toast. There are no cards anywhere in the build — structure is carried entirely by rules and columns, so a dense screen reads as one continuous document rather than a tray of tiles.\n\nThe reading field stays achromatic. Colour is a material in this world, not decoration: violet stamp-pad ink for authority, red-tape crimson for halt, file green for verified, blue pencil for provisional marks. Every one of these sits in a border, an edge rule, a chip stroke or a dot — never behind a figure and, in the severity scale, never inside text. Density is high and deliberate: 0.625rem–0.8125rem is the working range, and the system trusts tabular numerals and hairlines to hold that density legible under pressure rather than reaching for whitespace.\n\nTwo grounds ship, and both are real use scenes rather than a preference toggle: a bright district control room with the screen mirrored to a wall (the noting-sheet ground), and the same desk at 03:00 with the room lights down (the ink ground). The grammar is identical across both; only the ground changes. The confirmed anti-references are the dark glowing mission-control template and its opposite, the white tricolour government portal.",
+    "keyCharacteristics": [
+      "Zero border-radius, everywhere, including data marks and stroke caps.",
+      "Hairline rules and ruled columns instead of cards, shadows or fills.",
+      "A numbered margin rail on every register — the serial is the audit trail.",
+      "Tabular, lining numerals on every figure in the system.",
+      "Colour lives in edges, borders and chips; the reading field stays achromatic.",
+      "Two complete themes, defined explicitly rather than derived."
+    ],
+    "rules": [
+      { "name": "The Edge-Not-Fill Rule", "body": "Severity never colours text and never fills a reading surface. It lives in a 1px chip border, a 2px inset chip edge, a .band-edge inset rule, a 3px underline beneath a large numeral, and the foot of a zone cell. Chip and numeral text is always --ink. This is a measured constraint, not a preference: the light ramp's pale steps measured 1.5–2.3:1 as 9px text, and a labelled chip is no relief when the label is the failing colour.", "section": "colors" },
+      { "name": "The Marks-Only Rule", "body": "--ink-4 is for hairline glyphs, disabled states and decorative rules. It never carries text. It clears 4.5:1 on the sheet grounds but not on the jacket, so every text use steps up to --ink-3 or above. Every other text token clears 4.5:1 on all four grounds in both themes.", "section": "colors" },
+      { "name": "The Two-Material Rule", "body": "Plum (--sim) and violet (--stamp) are separated by hue, not lightness — roughly ΔE 16 apart. One says a figure is simulated; the other says a human committed to it. Never bring their hues closer, and never substitute one for the other.", "section": "colors" },
+      { "name": "The Status-Scale Rule", "body": "The severity ramp is a labelled status palette, not a categorical or continuous one. CVD separation passes in both themes. Light is lightness-monotonic; dark is not, and cannot be — a yellow-to-red path has no monotonic lightness — which is acceptable only because the ramp always travels with its label and never carries meaning by colour alone.", "section": "colors" },
+      { "name": "The Two-Grounds Rule", "body": "Day and night are both production scenes. Every new token must be specified in both, at the same contrast standard, in all three theme blocks (:root, the prefers-color-scheme: dark block, and [data-theme='dark']). A token defined in one ground only is an unshipped token.", "section": "colors" },
+      { "name": "The Tabular Rule", "body": "Every figure in this system is compared against the figure in the row above it, so tabular-nums lining-nums is applied globally to tables, [data-numeric] and .num, and every mono value carries it — including figures drawn inside SVG. A proportional numeral in a register is a defect.", "section": "typography" },
+      { "name": "The Two-Voice Rule", "body": "Prose is Archivo; every label, head and control is Archivo Narrow in letterspaced caps; every number is Azeret Mono. A number set in the sans faces, or a paragraph set in the narrow cut, is out of the world.", "section": "typography" },
+      { "name": "The Standing-Head Rule", "body": "A page heading carries its own weight — no eyebrow, kicker or category line above it. PageHead renders title, standfirst and file number in that order, and nothing before the title.", "section": "typography" },
+      { "name": "The Rule-Not-Shadow Rule", "body": "Separation between two blocks is a 1px hairline in --rule, --rule-soft or --rule-strong. Reach for a shadow only when a surface genuinely floats over the page; on a ruled field, a shadow is a card in disguise.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do carry every severity signal in an edge — a chip border, a 2px inset, a .band-edge, a 3px underline under a numeral, or a cell foot rule — and keep the text --ink.",
+      "Do set every figure in Azeret Mono with tabular lining numerals, including figures drawn inside SVG.",
+      "Do define any new token three times: :root, the prefers-color-scheme: dark block, and [data-theme='dark']. Both grounds are production.",
+      "Do separate blocks with a 1px hairline (--rule; --rule-soft within a block; --rule-strong to close a register or masthead).",
+      "Do put an interactive boundary on --control-edge, not --rule-strong, so it clears the 3:1 non-text floor without coarsening the ruled field.",
+      "Do label any simulated or model-produced figure with a plum provenance mark; an accurate scope holds up better under questioning than an implied claim.",
+      "Do animate proportion with scaleX and a 260ms cubic-bezier(0.16, 1, 0.3, 1), never with width.",
+      "Do give every .pulse, .chase, .rule-draw and stamp landing a prefers-reduced-motion off-switch.",
+      "Do keep drawn marks on the icon grammar: 16-unit grid, 1.25 stroke, square caps, mitred joins."
+    ],
+    "donts": [
+      "Don't introduce a border radius. Not on buttons, chips, inputs, slider thumbs, bars or data terminals. The one exception already in the system is the 1px focus-outline radius.",
+      "Don't build a card. If a block needs separation, rule it; if it genuinely floats, use .sheet-raised with --shadow-1.",
+      "Don't set text in --ink-4, and don't set any text on the jacket below --ink-3.",
+      "Don't put --sim where --stamp belongs, or the reverse. Simulated and signed are different claims about the same figure.",
+      "Don't fold --water into the severity ramp; flood extent and severity are separate encodings.",
+      "Don't put an eyebrow, kicker or category label above a page heading. PageHead starts at the title.",
+      "Don't use a spinner, a toast, a pill, a rounded progress bar or a glyph-font icon; each has a drawn equivalent in this system.",
+      "Don't let the phase rail wrap. It scales and scrolls.",
+      "Don't add a second ambient shadow. --shadow-1 and --stamp-shadow are the whole vocabulary."
+    ]
+  }
+}

@@ -1,26 +1,667 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+/* ==================================================================
+   AEGIS — "The Signed Order"
+
+   The visual world is the Indian government file, translated into an
+   operations console. Not rendered as paper: translated as a grammar.
+
+     · Ruled columns and hairlines carry structure. There are no cards.
+     · Every record has a serial in a margin rail, because a file numbers
+       everything and because that is literally what an audit trail is.
+     · Colour lives in rules, chips and edges. The reading field stays
+       achromatic so dense numbers stay legible under pressure.
+     · Approval is a stamp — a material act that leaves an impression.
+
+   Two grounds, both real use scenes: DAY is a bright district control room
+   with the screen mirrored to a wall; NIGHT is the same desk at 03:00 with
+   the room lights down. Same grammar, different ground.
+   ================================================================== */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  /* Ground — the file board and the sheet clipped to it */
+  --jacket: #d9ddd2;
+  --jacket-edge: #cbd0c2;
+  --sheet: #f3f5ef;
+  --sheet-raised: #fafbf7;
+  --sheet-sunk: #e9ece3;
+
+  /* Ink */
+  --ink: #16211c;
+  --ink-2: #3f4b45;
+  --ink-3: #53605a;
+  /* Marks only — hairline glyphs, disabled states, decorative rules.
+     Never text: it clears 4.5:1 on the sheet grounds but not on the jacket. */
+  --ink-4: #616e68;
+
+  /* Rules — the ledger's skeleton */
+  --rule: #c2cabb;
+  --rule-soft: #d6dccf;
+  --rule-strong: #97a292;
+  --rule-ink: #16211c;
+
+  /* The file's own materials */
+  --stamp: #5b2d8e; /* violet stamp-pad ink */
+  --stamp-soft: #5b2d8e26;
+  --tape: #b4232a; /* red tape */
+  --seal: #0f5c4a; /* file green — verified, approved */
+  --pencil: #3a5a7c; /* blue pencil — provisional marks */
+
+  /* Severity ramp */
+  --sev-clear: #84958f;
+  --sev-monitor: #d9ae3c;
+  --sev-elevated: #ce8617;
+  --sev-severe: #be5010;
+  --sev-critical: #96161d;
+  --water: #1d6088;
+
+  /* Status */
+  --live: #0f5c4a;
+  --sim: #a3206b;
+  --warn: #785710;
+  --halt: #b8202c;
+
+  --control-edge: #6b786d;
+  --focus: #5b2d8e;
+  --shadow-1: 0 1px 2px #16211c14, 0 2px 6px #16211c0f;
+  --shadow-2: 0 2px 4px #16211c1a, 0 8px 20px #16211c14;
+  --stamp-shadow: 0 1px 1px #5b2d8e33;
+
+  --rail: 3.25rem;
+  --hair: 1px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+:root[data-theme='dark'],
+:root:not([data-theme='light']) {
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --jacket: #0d1116;
+    --jacket-edge: #070a0d;
+    --sheet: #141a20;
+    --sheet-raised: #1a222a;
+    --sheet-sunk: #0f151a;
+
+    --ink: #e3e9e4;
+    --ink-2: #b3bdb7;
+    --ink-3: #7f8c86;
+    --ink-4: #7c8983;
+
+    --rule: #2a343c;
+    --rule-soft: #202930;
+    --rule-strong: #3d4a53;
+    --rule-ink: #e3e9e4;
+
+    --stamp: #a97ce8;
+    --stamp-soft: #a97ce826;
+    --tape: #ea666b;
+    --seal: #3fbf9b;
+    --pencil: #7aa8d0;
+
+    --sev-clear: #697872;
+    --sev-monitor: #87801f;
+    --sev-elevated: #d6ae24;
+    --sev-severe: #e5613a;
+    --sev-critical: #ff97a4;
+    --water: #4d94c4;
+
+    --live: #3fbf9b;
+    --sim: #f28ac6;
+    --warn: #d8a63a;
+    --halt: #ff5a63;
+
+    --control-edge: #647178;
+    --focus: #a97ce8;
+    --shadow-1: 0 1px 2px #00000059, 0 2px 8px #0000003d;
+    --shadow-2: 0 2px 6px #00000073, 0 10px 28px #0000004d;
+    --stamp-shadow: 0 1px 2px #a97ce833;
   }
 }
 
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --jacket: #0d1116;
+  --jacket-edge: #070a0d;
+  --sheet: #141a20;
+  --sheet-raised: #1a222a;
+  --sheet-sunk: #0f151a;
+
+  --ink: #e3e9e4;
+  --ink-2: #b3bdb7;
+  --ink-3: #7f8c86;
+  --ink-4: #7c8983;
+
+  --rule: #2a343c;
+  --rule-soft: #202930;
+  --rule-strong: #3d4a53;
+  --rule-ink: #e3e9e4;
+
+  --stamp: #a97ce8;
+  --stamp-soft: #a97ce826;
+  --tape: #ea666b;
+  --seal: #3fbf9b;
+  --pencil: #7aa8d0;
+
+  --sev-clear: #697872;
+  --sev-monitor: #87801f;
+  --sev-elevated: #d6ae24;
+  --sev-severe: #e5613a;
+  --sev-critical: #ff97a4;
+  --water: #4d94c4;
+
+  --live: #3fbf9b;
+  --sim: #f28ac6;
+  --warn: #d8a63a;
+  --halt: #ff5a63;
+
+  --control-edge: #647178;
+  --focus: #a97ce8;
+  --shadow-1: 0 1px 2px #00000059, 0 2px 8px #0000003d;
+  --shadow-2: 0 2px 6px #00000073, 0 10px 28px #0000004d;
+  --stamp-shadow: 0 1px 2px #a97ce833;
+}
+
+@theme inline {
+  --color-jacket: var(--jacket);
+  --color-jacket-edge: var(--jacket-edge);
+  --color-sheet: var(--sheet);
+  --color-sheet-raised: var(--sheet-raised);
+  --color-sheet-sunk: var(--sheet-sunk);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --color-rule-strong: var(--rule-strong);
+  --color-stamp: var(--stamp);
+  --color-tape: var(--tape);
+  --color-seal: var(--seal);
+  --color-pencil: var(--pencil);
+  --color-live: var(--live);
+  --color-sim: var(--sim);
+  --color-warn: var(--warn);
+  --color-halt: var(--halt);
+  --color-sev-clear: var(--sev-clear);
+  --color-sev-monitor: var(--sev-monitor);
+  --color-sev-elevated: var(--sev-elevated);
+  --color-sev-severe: var(--sev-severe);
+  --color-sev-critical: var(--sev-critical);
+  --color-water: var(--water);
+  --color-control-edge: var(--control-edge);
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-narrow: var(--font-archivo-narrow), var(--font-archivo), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-azeret), ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-deva: var(--font-noto-deva), var(--font-archivo), sans-serif;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+* {
+  border-color: var(--rule);
+}
+
+html {
+  background: var(--jacket);
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--jacket);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv05' 1;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Every figure in this system is compared against another figure in the
+   row above it. Tabular numerals are not a nicety here. */
+table,
+[data-numeric],
+.num {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+::selection {
+  background: var(--stamp);
+  color: var(--sheet-raised);
+}
+
+:root[data-theme='dark'] ::selection {
+  background: var(--stamp);
+  color: #0d1116;
+}
+
+input,
+textarea {
+  caret-color: var(--stamp);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+/* Scrollbars belong to the design, not to the browser. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--rule);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--rule-strong);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+/* ------------------------------------------------------------------ */
+/* The file grammar                                                    */
+/* ------------------------------------------------------------------ */
+
+/* A sheet: the ruled field data sits on. Squared, hairlined, never a card. */
+.sheet {
+  background: var(--sheet);
+  border: var(--hair) solid var(--rule);
+}
+
+.sheet-raised {
+  background: var(--sheet-raised);
+  border: var(--hair) solid var(--rule);
+  box-shadow: var(--shadow-1);
+}
+
+/* Registration ticks — a file's punched corners, and the mark a print shop
+   uses to prove the sheet is aligned. They earn their place by marking which
+   panel currently holds the operation. */
+.ticked {
+  position: relative;
+}
+.ticked::before,
+.ticked::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  border-color: var(--stamp);
+  border-style: solid;
+  opacity: 0;
+  transition: opacity 140ms ease-out;
+}
+.ticked::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+.ticked::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1px 1px 0;
+}
+.ticked[data-active='true']::before,
+.ticked[data-active='true']::after {
+  width: 9px;
+  height: 9px;
+  opacity: 1;
+}
+
+/* Column heads on a ruled register */
+.colhead {
+  font-family: var(--font-narrow);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.2;
+}
+
+/* The margin rail — where a file carries its serials and the officer initials */
+.rail {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Field label / value pair, the unit of a government form */
+.field-label {
+  font-family: var(--font-narrow);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.field-value {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* The stamp                                                           */
+/* ------------------------------------------------------------------ */
+
+/* A real impression: double-ruled border, violet ink, sat at a slight angle,
+   multiplied into the sheet so it reads as ink on the page rather than a
+   sticker over it. */
+.stamp {
+  --stamp-rot: -1.5deg;
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--stamp);
+  box-shadow: inset 0 0 0 1px var(--stamp);
+  color: var(--stamp);
+  font-family: var(--font-narrow);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  transform: rotate(var(--stamp-rot));
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+}
+:root[data-theme='dark'] .stamp {
+  mix-blend-mode: screen;
+}
+.stamp[data-tone='reject'] {
+  border-color: var(--tape);
+  box-shadow: inset 0 0 0 1px var(--tape);
+  color: var(--tape);
+}
+
+@keyframes stamp-land {
+  from {
+    opacity: 0;
+    transform: rotate(var(--stamp-rot)) scale(1.06);
+  }
+  to {
+    opacity: 0.92;
+    transform: rotate(var(--stamp-rot)) scale(1);
+  }
+}
+.stamp[data-land='true'] {
+  animation: stamp-land 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp[data-land='true'] {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Severity — colour in the edge, never behind the numbers              */
+/* ------------------------------------------------------------------ */
+
+[data-band='clear'] {
+  --band: var(--sev-clear);
+}
+[data-band='monitor'] {
+  --band: var(--sev-monitor);
+}
+[data-band='elevated'] {
+  --band: var(--sev-elevated);
+}
+[data-band='severe'] {
+  --band: var(--sev-severe);
+}
+[data-band='critical'] {
+  --band: var(--sev-critical);
+}
+
+/* The band colour lives in the border and the edge rule; the label itself is
+   ink. Putting the severity ramp into 9px text was legible for the dark end of
+   the ramp and not for the light end — Monitor came out at 1.9:1 — and "the
+   chip is labelled" is no relief when the label is the failing colour. */
+.band-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3125rem;
+  padding: 0.0625rem 0.375rem;
+  border: 1px solid var(--band, var(--rule-strong));
+  box-shadow: inset 2px 0 0 var(--band, transparent);
+  color: var(--ink);
+  font-family: var(--font-narrow);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.band-edge {
+  box-shadow: inset 2px 0 0 var(--band, transparent);
+}
+
+/* ------------------------------------------------------------------ */
+/* Controls, in the form's own vocabulary                              */
+/* ------------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4375rem;
+  padding: 0.4375rem 0.8125rem;
+  border: 1px solid var(--control-edge);
+  background: var(--sheet-raised);
+  color: var(--ink);
+  font-family: var(--font-narrow);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 120ms ease-out, border-color 120ms ease-out, color 120ms ease-out;
+}
+.btn:hover:not(:disabled) {
+  border-color: var(--ink-2);
+  background: var(--sheet-sunk);
+}
+.btn:active:not(:disabled) {
+  background: var(--sheet-sunk);
+  box-shadow: inset 0 1px 2px #16211c1f;
+}
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+.btn[data-tone='primary'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--sheet);
+}
+.btn[data-tone='primary']:hover:not(:disabled) {
+  background: var(--ink-2);
+  border-color: var(--ink-2);
+}
+.btn[data-tone='stamp'] {
+  border-color: var(--stamp);
+  color: var(--stamp);
+}
+.btn[data-tone='stamp']:hover:not(:disabled) {
+  background: var(--stamp-soft);
+  border-color: var(--stamp);
+}
+.btn[data-tone='danger'] {
+  border-color: var(--tape);
+  color: var(--tape);
+}
+.btn[data-tone='danger']:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--tape) 10%, transparent);
+}
+
+.input {
+  width: 100%;
+  padding: 0.4375rem 0.625rem;
+  background: var(--sheet-raised);
+  border: 1px solid var(--rule);
+  border-bottom-color: var(--rule-strong);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+.input::placeholder {
+  color: var(--ink-4);
+}
+.input:focus {
+  border-color: var(--stamp);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--stamp-soft);
+}
+
+/* Range control — a form's slide rule, not a rounded toy */
+.slide {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 18px;
+  background: transparent;
+  cursor: ew-resize;
+}
+.slide::-webkit-slider-runnable-track {
+  height: 3px;
+  background: var(--rule);
+  border-top: 1px solid var(--control-edge);
+}
+.slide::-moz-range-track {
+  height: 3px;
+  background: var(--rule);
+}
+.slide::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 3px;
+  height: 15px;
+  margin-top: -7px;
+  background: var(--stamp);
+  border: none;
+  border-radius: 0;
+}
+.slide::-moz-range-thumb {
+  width: 3px;
+  height: 15px;
+  background: var(--stamp);
+  border: none;
+  border-radius: 0;
+}
+.slide:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--stamp-soft);
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion — one authored moment, plus honest state feedback            */
+/* ------------------------------------------------------------------ */
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.rule-draw {
+  transform-origin: left;
+  animation: rule-draw 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pulse-live {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.pulse {
+  animation: pulse-live 2.8s ease-in-out infinite;
+}
+
+@keyframes chase {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.chase {
+  animation: chase 900ms linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rule-draw,
+  .pulse,
+  .chase {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                           */
+/* ------------------------------------------------------------------ */
+
+.deva {
+  font-family: var(--font-deva);
+}
+
+.hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    var(--rule) 5px,
+    var(--rule) 6px
+  );
+}
+
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

@@ -1,0 +1,68 @@
+name: aegis_field
+description: >-
+  AEGIS Field — the offline-first responder app for boat, ambulance and ground
+  rescue crews. Receives dispatch instructions from the AEGIS command centre,
+  holds them and their routes on the device, reads them aloud in English or
+  Hindi, and carries the crew's acknowledgement back.
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Transport to the command centre. Every call is optional: the app is fully
+  # usable with no server reachable.
+  http: ^1.2.2
+
+  # Offline store. Orders, routes and the outbox survive a force-quit and a
+  # dead battery, which is the entire point of a field client.
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Spoken instructions, English and Hindi.
+  flutter_tts: ^4.2.0
+
+  # Position against the cached route. Degrades to manual waypoint stepping.
+  geolocator: ^13.0.2
+
+  # Native alerts, so a new order wakes a phone in a dry bag.
+  flutter_local_notifications: ^17.2.4
+
+  # Archivo / Archivo Narrow / Azeret Mono, per DESIGN.md. Falls back to the
+  # platform faces when the device has never been online.
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  # To make typography work with no network at all, drop the six TTF files
+  # named in assets/fonts/README.md into that folder and uncomment this block.
+  # lib/theme/typography.dart picks up bundled faces automatically.
+  #
+  # fonts:
+  #   - family: Archivo
+  #     fonts:
+  #       - asset: assets/fonts/Archivo-Regular.ttf
+  #       - asset: assets/fonts/Archivo-Medium.ttf
+  #         weight: 500
+  #   - family: Archivo Narrow
+  #     fonts:
+  #       - asset: assets/fonts/ArchivoNarrow-SemiBold.ttf
+  #         weight: 600
+  #       - asset: assets/fonts/ArchivoNarrow-Bold.ttf
+  #         weight: 700
+  #   - family: Azeret Mono
+  #     fonts:
+  #       - asset: assets/fonts/AzeretMono-Regular.ttf
+  #       - asset: assets/fonts/AzeretMono-SemiBold.ttf
+  #         weight: 600

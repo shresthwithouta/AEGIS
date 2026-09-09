@@ -6,9 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify": "node scripts/verify.mjs",
+    "vision": "node scripts/vision.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.124.0",
+    "@langchain/core": "^1.2.9",
+    "@langchain/langgraph": "^1.4.14",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"

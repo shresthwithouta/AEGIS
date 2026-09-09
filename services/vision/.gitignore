@@ -1,0 +1,12 @@
+weights/*.pt
+weights/*.pth
+yolov8n.pt
+runs/
+__pycache__/
+*.pyc
+.venv/
+
+# Generated test frames — regenerate with npm run verify, or drop your own in.
+sample_flood.png
+verify_test.png
+test_people.jpg
