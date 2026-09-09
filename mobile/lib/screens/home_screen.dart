@@ -65,10 +65,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-extension on String {
-  String padStart(int width) => padLeft(width, '0');
-}
-
 class _OnlineDot extends StatelessWidget {
   const _OnlineDot({required this.online});
   final bool online;
