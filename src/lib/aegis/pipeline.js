@@ -32,7 +32,7 @@ import { rankZones, DEFAULT_WEIGHTS } from './severity';
 import { createSim, planSorties, stepFleet } from './drones';
 import { buildRequirement, allocateDeterministic, assignDepots } from './resources';
 import { planRoute, planAmphibious, BOAT_ONLY_FLOOD } from './routing';
-import { probeVisionService, visionServiceConfigured } from './visionService';
+import { probeVisionService, visionServiceConfigured, mergeVisionResult } from './visionService';
 
 /* ------------------------------------------------------------------ */
 /* Channels                                                            */
@@ -47,6 +47,7 @@ const AegisState = Annotation.Root({
   officer: Annotation({ reducer: last, default: () => null }),
   weights: Annotation({ reducer: last, default: () => DEFAULT_WEIGHTS }),
   imagery: Annotation({ reducer: last, default: () => null }),
+  uploadedVision: Annotation({ reducer: last, default: () => null }),
   visionService: Annotation({ reducer: last, default: () => null }),
   zones: Annotation({ reducer: last, default: () => [] }),
   ranked: Annotation({ reducer: last, default: () => [] }),
@@ -88,7 +89,7 @@ const started = (config, node) => emit(config, { kind: 'node:start', node });
 
 async function ingestNode(state, config) {
   started(config, 'ingest');
-  const zones = buildZones(state.incidentRef);
+  let zones = buildZones(state.incidentRef);
   const meanCloud = zones.reduce((a, z) => a + z.cloudCover, 0) / zones.length;
 
   // Choose the finest usable pass. Heavy cloud forces the SAR product, which
@@ -100,14 +101,26 @@ async function ingestNode(state, config) {
 
   emit(config, { kind: 'imagery', label: chosen.label, cloud: +meanCloud.toFixed(2) });
 
+  const notes = [
+    meanCloud > 0.38
+      ? `Optical imagery ${Math.round(meanCloud * 100)}% cloud-obscured. Fell back to ${sar.label}; damage classification confidence is reduced accordingly.`
+      : `Optical pass usable — ${Math.round(meanCloud * 100)}% mean cloud cover.`,
+  ];
+
+  // An officer-uploaded frame takes precedence over the incident model — its
+  // flood extent is a measurement of this run, not a synthetic backdrop.
+  if (state.uploadedVision?.zones?.length) {
+    zones = mergeVisionResult(zones, state.uploadedVision);
+    notes.push(
+      `Stage 1 uses the uploaded frame${state.uploadedVision.file?.name ? ` (${state.uploadedVision.file.name})` : ''} — ` +
+        `${state.uploadedVision.summary?.flooded_zones ?? 0} of ${zones.length} zones show inundation above 30%.`
+    );
+  }
+
   return {
     zones,
     imagery: { ...chosen, meanCloudCover: +meanCloud.toFixed(2), degraded: meanCloud > 0.38 },
-    notes: [
-      meanCloud > 0.38
-        ? `Optical imagery ${Math.round(meanCloud * 100)}% cloud-obscured. Fell back to ${sar.label}; damage classification confidence is reduced accordingly.`
-        : `Optical pass usable — ${Math.round(meanCloud * 100)}% mean cloud cover.`,
-    ],
+    notes,
   };
 }
 
@@ -122,7 +135,17 @@ async function visionNode(state, config) {
   const zones = state.zones;
   let vision = null;
 
-  if (visionServiceConfigured()) {
+  if (state.uploadedVision) {
+    const seg = state.uploadedVision.provenance?.segmentation;
+    vision = {
+      reachable: true,
+      device: 'officer upload',
+      segmentation: seg,
+      trainedSegmentation: Boolean(seg?.trained),
+      detectionAvailable: Boolean(state.uploadedVision.provenance?.detection?.available),
+    };
+    emit(config, { kind: 'vision-service', source: 'upload', segmentation: seg?.method });
+  } else if (visionServiceConfigured()) {
     const health = await probeVisionService();
     if (health?.reachable) {
       vision = health;
@@ -145,7 +168,11 @@ async function visionNode(state, config) {
     `Flood segmentation: ${flooded} of ${zones.length} zones show inundation above 30%.`,
     `Damage detection: ${damaged} structures classified damaged across the area of interest.`,
   ];
-  if (vision) {
+  if (state.uploadedVision) {
+    notes.push(
+      `Segmentation via ${vision.segmentation?.model ?? 'classical baseline'} on the uploaded frame; damage still comes from the incident model.`
+    );
+  } else if (vision) {
     notes.push(
       `Vision service reachable on ${vision.device}: segmentation via ${vision.segmentation?.model} (${
         vision.trainedSegmentation ? 'trained U-Net' : 'classical baseline'

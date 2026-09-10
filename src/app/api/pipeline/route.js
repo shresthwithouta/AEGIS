@@ -50,16 +50,16 @@ function slim(update) {
 }
 
 export async function POST(request) {
-  seedRegister();
+  await seedRegister();
   const body = await request.json().catch(() => ({}));
-  const { threadId, resume, officer, designation, weights } = body;
+  const { threadId, resume, officer, designation, weights, visionResult } = body;
 
   if (!threadId) return Response.json({ error: 'threadId is required' }, { status: 400 });
 
   const isResume = resume !== undefined && resume !== null;
 
   if (isResume) {
-    record({
+    await record({
       kind: resume.action === 'approve' ? ENTRY_KINDS.APPROVAL : ENTRY_KINDS.OVERRIDE,
       actor: resume.officer ?? officer ?? 'UNNAMED',
       designation: resume.designation ?? designation ?? null,
@@ -73,7 +73,7 @@ export async function POST(request) {
       detail: resume,
     });
   } else {
-    record({
+    await record({
       kind: ENTRY_KINDS.RUN_START,
       actor: officer ?? 'DUTY OFFICER',
       designation: designation ?? null,
@@ -99,7 +99,12 @@ export async function POST(request) {
       try {
         const input = isResume
           ? new Command({ resume })
-          : { incidentRef: INCIDENT.fileNo, officer: officer ?? null, ...(weights ? { weights } : {}) };
+          : {
+              incidentRef: INCIDENT.fileNo,
+              officer: officer ?? null,
+              ...(weights ? { weights } : {}),
+              ...(visionResult ? { uploadedVision: visionResult } : {}),
+            };
 
         send({ type: isResume ? 'resume' : 'start', threadId, value: isResume ? resume : undefined });
 
@@ -126,13 +131,13 @@ export async function POST(request) {
           if (chunk.__interrupt__) {
             const payload = chunk.__interrupt__[0]?.value ?? chunk.__interrupt__[0];
             interrupted = true;
-            record({
+            await record({
               kind: ENTRY_KINDS.GATE_OPEN,
               threadId,
               summary: `${payload?.title ?? 'Approval gate'} awaiting a decision.`,
               detail: { gate: payload?.gate },
             });
-            saveRun(threadId, { status: 'interrupted', gate: payload?.gate });
+            await saveRun(threadId, { status: 'interrupted', gate: payload?.gate });
             send({ type: 'interrupt', threadId, node: payload?.gate === 1 ? 'gate_resources' : 'gate_dispatch', payload });
             continue;
           }
@@ -141,7 +146,7 @@ export async function POST(request) {
             send({ type: 'node:end', node, meta: { label: NODE_LABELS[node] ?? node }, update: slim(update) });
 
             if (node === 'decide') {
-              record({
+              await record({
                 kind: ENTRY_KINDS.RECOMMENDATION,
                 actor: update?.mode === 'live' ? 'AEGIS ALLOCATION AGENT' : 'AEGIS RULE ENGINE',
                 threadId,
@@ -150,7 +155,7 @@ export async function POST(request) {
               });
             } else if (node === 'review') {
               const r = update?.safetyReview;
-              record({
+              await record({
                 kind: ENTRY_KINDS.RECOMMENDATION,
                 actor: r?.source === 'reasoned' ? 'AEGIS SAFETY AGENT' : 'AEGIS RULE ENGINE',
                 threadId,
@@ -160,25 +165,25 @@ export async function POST(request) {
                 detail: r,
               });
             } else if (node === 'dispatch') {
-              record({
+              await record({
                 kind: ENTRY_KINDS.DISPATCH,
                 actor: 'AEGIS',
                 threadId,
                 summary: `Dispatch order issued — ${update?.dispatchOrder?.orders?.length ?? 0} movement orders.`,
               });
             } else {
-              record({ kind: ENTRY_KINDS.STAGE, threadId, summary: `${NODE_LABELS[node] ?? node} complete.` });
+              await record({ kind: ENTRY_KINDS.STAGE, threadId, summary: `${NODE_LABELS[node] ?? node} complete.` });
             }
           }
         }
 
         if (!interrupted) {
           const snapshot = await app.getState(config);
-          saveRun(threadId, { status: 'complete' });
+          await saveRun(threadId, { status: 'complete' });
           send({ type: 'end', threadId, state: slim(snapshot?.values ?? {}) });
         }
       } catch (err) {
-        saveRun(threadId, { status: 'error', error: String(err?.message ?? err) });
+        await saveRun(threadId, { status: 'error', error: String(err?.message ?? err) });
         send({ type: 'error', error: String(err?.message ?? err) });
       } finally {
         controller.close();
@@ -211,7 +216,7 @@ export async function GET(request) {
     next: snapshot.next ?? [],
     payload: pending[0]?.value ?? null,
     state: slim(snapshot.values ?? {}),
-    run: getRun(threadId),
+    run: await getRun(threadId),
     reasoningConfigured: reasoningConfigured(),
   });
 }

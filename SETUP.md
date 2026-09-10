@@ -86,11 +86,15 @@ CUDA build:
 |---|---|---|---|
 | `ANTHROPIC_API_KEY` | No | Turns on the two reasoning agents. Without it, rule engines. | <https://console.anthropic.com> |
 | `VISION_SERVICE_URL` | No | Points at the Python service. Without it, stage 1 uses the incident model. | `http://127.0.0.1:8000` |
+| `MONGODB_URI` | No | Persists the audit register to MongoDB. Without it, the register is process-local in-memory and resets on restart. | An Atlas connection string, e.g. `mongodb+srv://user:pass@cluster.mongodb.net/` |
 
-Both go in **`.env.local`** at the project root. It is git-ignored.
+All three go in **`.env.local`** at the project root. It is git-ignored —
+never commit a real connection string or API key; `.env.example` documents
+the shape without secrets.
 
-There is nothing else to configure. No database, no auth provider, no map API
-key — the map is drawn from the zone model, not tiled from a service.
+There is no auth provider and no map API key — the map is drawn from the
+zone model, not tiled from a service. `MONGODB_URI` is the one optional
+exception to "no database": everything else still runs fully without it.
 
 ---
 

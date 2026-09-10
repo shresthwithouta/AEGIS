@@ -15,8 +15,14 @@ services:
         value: cpu
       - key: LOG_LEVEL
         value: INFO
-      # Comma-separated list of origins allowed to call this service — set this
-      # to your Vercel deployment URL(s), e.g. https://aegis.vercel.app. Left as
-      # "*" until you do; tighten it once the frontend URL is known.
+      # Comma-separated list of origins allowed to call this service directly
+      # from a browser. FastAPI's CORSMiddleware matches these exactly — no
+      # wildcards — so this only lists the stable production domain, not
+      # Vercel's per-deploy preview URLs. That's sufficient: the console
+      # itself never calls this service from the browser, only server-side
+      # (Next.js's own /api/vision route proxies to it, see
+      # src/lib/aegis/visionService.js), which CORS does not gate at all.
+      # This setting only matters if something browser-side calls the
+      # service directly, e.g. while poking at it from the API docs at /docs.
       - key: AEGIS_ALLOWED_ORIGINS
-        value: "*"
+        value: "https://aegis-psi-flax-35.vercel.app"

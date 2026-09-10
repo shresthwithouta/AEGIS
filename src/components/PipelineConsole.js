@@ -45,7 +45,7 @@ const NODE_LABELS = {
   dispatch: 'Issue dispatch order',
 };
 
-export default function PipelineConsole({ zones: baseZones, shape, reasoningLive }) {
+export default function PipelineConsole({ zones: baseZones, shape, reasoningLive, visionResult }) {
   const [threadId] = useState(() => `run-${Date.now().toString(36)}`);
   const [running, setRunning] = useState(false);
   const [events, setEvents] = useState([]);
@@ -153,7 +153,7 @@ export default function PipelineConsole({ zones: baseZones, shape, reasoningLive
     setState({});
     setGate(null);
     setStamped({});
-    consume({ officer, designation });
+    consume({ officer, designation, ...(visionResult ? { visionResult } : {}) });
   };
 
   const decide = (action) => {
@@ -230,6 +230,11 @@ export default function PipelineConsole({ zones: baseZones, shape, reasoningLive
             </span>
           </div>
           <div className="flex items-center gap-2">
+            {visionResult ? (
+              <span className="rail" title="The pipeline will use the frame uploaded above instead of the incident model's imagery.">
+                Using uploaded frame
+              </span>
+            ) : null}
             {started ? (
               <button type="button" className="btn" onClick={start} disabled={running}>
                 <Icon name="rewind" size={12} />
@@ -290,9 +295,8 @@ export default function PipelineConsole({ zones: baseZones, shape, reasoningLive
           {!started ? (
             <Sheet>
               <SheetHead title="Stage output" />
-              <Empty title="Pipeline not yet run" icon="node">
-                Execute the pipeline to work an incident from imagery through to a signed dispatch order. The graph will
-                halt twice and wait for a signature — that is the design, not a delay.
+              <Empty title="Not yet run" icon="node">
+                Upload imagery above, then execute. Two approval gates require a named officer&rsquo;s signature before dispatch.
               </Empty>
             </Sheet>
           ) : null}

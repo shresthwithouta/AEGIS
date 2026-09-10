@@ -42,7 +42,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  seedRegister();
+  await seedRegister();
 
   if (!visionServiceConfigured()) {
     return Response.json(
@@ -77,7 +77,7 @@ export async function POST(request) {
     const result = await analyseFrame(file, { grid: 10 });
     const prov = result.provenance ?? {};
 
-    record({
+    await record({
       kind: ENTRY_KINDS.STAGE,
       actor: prov.segmentation?.trained ? 'AEGIS VISION (U-Net)' : 'AEGIS VISION (classical baseline)',
       summary:

@@ -3,26 +3,118 @@
 /**
  * Stage 1, with a real image.
  *
- * Drop a satellite or UAV frame and the Python service segments it, grids it
- * into the same 100 zones the rest of the system reasons over, and reports
- * which model produced each field. The provenance strip is not decoration: a
- * flood fraction from a trained U-Net and one from a classical water index are
- * different kinds of claim, and an officer must be able to see which they have.
- *
- * When no service is configured this panel says so and stays out of the way —
- * the pipeline runs on the incident model regardless.
+ * Drop a satellite or UAV frame. When the Python vision service is reachable
+ * it segments the frame and reports which model produced each field; when it
+ * isn't, the same grid is produced by a classical water-index heuristic
+ * running in the browser, labelled SIMULATED. Either way the result is handed
+ * up to the pipeline via `onResult`, so what the officer uploads is what the
+ * response is planned against — not a disconnected preview.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from './Icon';
+import { zoneId } from '@/lib/aegis/incident';
 import { Sheet, SheetHead, Field, Note, Working, Provenance, StatusDot, bandColour } from './ui';
 
-export default function VisionIngest() {
+const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+/** Persist the frame so it survives a reload. Returns null if not configured or the upload fails — never blocks analysis on it. */
+async function uploadToCloudinary(file) {
+  if (!CLOUD_NAME || !UPLOAD_PRESET) return null;
+  try {
+    const body = new FormData();
+    body.append('file', file);
+    body.append('upload_preset', UPLOAD_PRESET);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.secure_url ?? null;
+  } catch {
+    return null;
+  }
+}
+
+const clamp01 = (n) => Math.max(0, Math.min(1, n));
+
+async function analyseOnServer(file) {
+  const body = new FormData();
+  body.append('image', file);
+  const res = await fetch('/api/vision', { method: 'POST', body });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? `Vision service responded ${res.status}`);
+  return data;
+}
+
+/**
+ * Classical water-index baseline, run in the browser: no Python service
+ * required. Buckets the frame into the same 10×10 grid the incident model
+ * uses and scores each cell on blueness and darkness — a real, if coarse,
+ * measurement, labelled SIMULATED because it is a heuristic, not a trained
+ * segmentation model.
+ */
+async function analyseLocally(file, grid = 10) {
+  const started = performance.now();
+  const bitmap = await createImageBitmap(file);
+  const W = grid * 24;
+  const H = grid * 24;
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(bitmap, 0, 0, W, H);
+
+  const cellW = W / grid;
+  const cellH = H / grid;
+  const zones = [];
+  let floodedZones = 0;
+  let meanFlood = 0;
+
+  for (let row = 0; row < grid; row++) {
+    for (let col = 0; col < grid; col++) {
+      const { data } = ctx.getImageData(col * cellW, row * cellH, cellW, cellH);
+      let sum = 0;
+      let n = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const blueness = (b - (r + g) / 2) / 255;
+        const darkness = 1 - (r + g + b) / 3 / 255;
+        sum += clamp01(blueness * 0.6 + darkness * 0.25);
+        n++;
+      }
+      const flood = +clamp01(n ? sum / n : 0).toFixed(3);
+      zones.push({ id: zoneId(col, row), col, row, flood });
+      meanFlood += flood;
+      if (flood >= 0.3) floodedZones++;
+    }
+  }
+  bitmap.close?.();
+
+  const elapsed = Math.round(performance.now() - started);
+  return {
+    source: 'local',
+    image: { width: bitmap.width, height: bitmap.height },
+    zones,
+    summary: { zones: zones.length, flooded_zones: floodedZones, mean_flood: +(meanFlood / zones.length).toFixed(3), persons: null },
+    provenance: {
+      segmentation: { model: 'classical water index (in-browser)', method: 'spectral-baseline', confidence: 'low', trained: false, notes: '' },
+      detection: { available: false },
+      damage: { available: false },
+    },
+    elapsed_ms: elapsed,
+    roundTripMs: elapsed,
+  };
+}
+
+export default function VisionIngest({ onResult }) {
   const [health, setHealth] = useState(null);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [cloudUrl, setCloudUrl] = useState(null);
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef(null);
   const previewRef = useRef(null);
@@ -46,24 +138,28 @@ export default function VisionIngest() {
     setBusy(true);
     setError(null);
     setResult(null);
+    setCloudUrl(null);
 
     if (previewRef.current) URL.revokeObjectURL(previewRef.current);
     previewRef.current = URL.createObjectURL(file);
     setPreview(previewRef.current);
 
     try {
-      const body = new FormData();
-      body.append('image', file);
-      const res = await fetch('/api/vision', { method: 'POST', body });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? `Vision service responded ${res.status}`);
-      setResult(data);
+      const [stored, data] = await Promise.all([
+        uploadToCloudinary(file),
+        health?.reachable ? analyseOnServer(file) : analyseLocally(file),
+      ]);
+
+      setCloudUrl(stored);
+      const finalResult = { ...data, cloudUrl: stored, file: data.file ?? { name: file.name, bytes: file.size, type: file.type || null } };
+      setResult(finalResult);
+      onResult?.(finalResult);
     } catch (err) {
       setError(String(err?.message ?? err));
     } finally {
       setBusy(false);
     }
-  }, []);
+  }, [health, onResult]);
 
   const onDrop = (e) => {
     e.preventDefault();
@@ -72,19 +168,6 @@ export default function VisionIngest() {
     if (file) analyse(file);
   };
 
-  if (health && !health.configured) {
-    return (
-      <Sheet>
-        <SheetHead title="Imagery ingestion" meta="not configured" />
-        <div className="px-3 py-2">
-          <Note tone="info" icon="layers">
-            {health.note} The pipeline runs on the incident model and labels stage 1 SIMULATED.
-          </Note>
-        </div>
-      </Sheet>
-    );
-  }
-
   const trained = health?.trainedSegmentation;
   const detects = health?.detectionAvailable;
 
@@ -92,21 +175,23 @@ export default function VisionIngest() {
     <Sheet active={Boolean(result)}>
       <SheetHead
         title="Imagery ingestion"
-        sub="Stage 1 · real inference over an uploaded frame"
+        sub="Stage 1 · upload a frame to drive the response"
         meta={health?.reachable ? `${health.segmentation?.model ?? ''}` : undefined}
         action={
           <StatusDot
             tone={health?.reachable ? 'live' : 'warn'}
             pulse={health?.reachable}
-            label={health?.reachable ? `Vision service · ${health.device}` : 'Service down'}
+            label={health?.reachable ? `Vision service · ${health.device}` : 'In-browser analysis'}
           />
         }
       />
 
       {health && !health.reachable ? (
         <div className="px-3 py-2">
-          <Note tone="warn" icon="alert">
-            {health.note}
+          <Note tone="info" icon="layers">
+            {health.configured
+              ? 'Vision service not answering — uploads are analysed in the browser and labelled SIMULATED.'
+              : 'No vision service configured — uploads are analysed in the browser and labelled SIMULATED.'}
           </Note>
         </div>
       ) : null}
@@ -148,7 +233,7 @@ export default function VisionIngest() {
             type="button"
             className="btn"
             onClick={() => inputRef.current?.click()}
-            disabled={busy || !health?.reachable}
+            disabled={busy}
           >
             <Icon name="search" size={12} />
             Choose an image
@@ -160,7 +245,6 @@ export default function VisionIngest() {
             className="sr-only"
             onChange={(e) => analyse(e.target.files?.[0])}
           />
-          
         </div>
       </div>
 
@@ -195,8 +279,21 @@ export default function VisionIngest() {
           </div>
 
           <Field label="File" value={`${result.file?.name ?? '—'} · ${((result.file?.bytes ?? 0) / 1e6).toFixed(2)} MB`} mono={false} />
+          <Field
+            label="Stored"
+            value={cloudUrl ? 'Cloudinary' : 'not persisted'}
+            tone={cloudUrl ? 'var(--seal)' : 'var(--warn)'}
+            title={cloudUrl ?? 'Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME / NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET to persist frames'}
+          />
           <Field label="Image" value={`${result.image?.width} × ${result.image?.height} px`} />
-          <Field label="Inference time" value={`${result.elapsed_ms} ms (service) · ${result.roundTripMs} ms round trip`} />
+          <Field
+            label="Inference time"
+            value={
+              result.source === 'local'
+                ? `${result.elapsed_ms} ms (in-browser)`
+                : `${result.elapsed_ms} ms (service) · ${result.roundTripMs} ms round trip`
+            }
+          />
           <Field
             label="Zones above 30% inundation"
             value={`${result.summary?.flooded_zones} of ${result.summary?.zones}`}

@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 export async function POST(request) {
-  seedRegister();
+  await seedRegister();
   const { question, phase, officer } = await request.json().catch(() => ({}));
 
   if (!question || typeof question !== 'string' || question.trim().length < 3) {
@@ -20,7 +20,7 @@ export async function POST(request) {
 
   const result = await ask(question.trim(), { phase: phase ?? 'before' });
 
-  record({
+  await record({
     kind: ENTRY_KINDS.QUERY,
     actor: officer ?? 'DUTY OFFICER',
     summary: `Doctrine query: "${question.trim().slice(0, 110)}"`,

@@ -1,5 +1,4 @@
-import PipelineConsole from '@/components/PipelineConsole';
-import VisionIngest from '@/components/VisionIngest';
+import OperationsConsole from '@/components/OperationsConsole';
 import { PageHead } from '@/components/ui';
 import { buildZones, INCIDENT } from '@/lib/aegis/incident';
 import { rankZones } from '@/lib/aegis/severity';
@@ -27,9 +26,7 @@ export default async function OperationsPage() {
         fileNo={`${INCIDENT.fileNo} · ${INCIDENT.name}`}
       />
 
-      <VisionIngest />
-
-      <PipelineConsole zones={zones} shape={shape} reasoningLive={live} />
+      <OperationsConsole zones={zones} shape={shape} reasoningLive={live} />
     </div>
   );
 }

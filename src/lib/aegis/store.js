@@ -7,12 +7,14 @@
  * later why a particular boat went to a particular village, and "the system
  * decided" is not an answer that survives an inquiry.
  *
- * Process-local for the prototype. A deployment writes to the district's own
- * database with retention under the state's records policy; the interface
- * shape does not change.
+ * Backed by MongoDB when MONGODB_URI is set, so entries survive a restart and
+ * a serverless cold start. Falls back to a process-local in-memory store when
+ * it is not — the interface shape is identical either way, which is what lets
+ * every caller stay unaware of which one it is talking to.
  */
 
 import { INCIDENT } from './incident';
+import { getDb } from './mongo';
 
 const g = globalThis;
 if (!g.__AEGIS_STORE__) {
@@ -22,7 +24,7 @@ if (!g.__AEGIS_STORE__) {
     serial: 40,
   };
 }
-const store = g.__AEGIS_STORE__;
+const mem = g.__AEGIS_STORE__;
 
 export const ENTRY_KINDS = Object.freeze({
   RUN_START: 'run.start',
@@ -37,70 +39,112 @@ export const ENTRY_KINDS = Object.freeze({
   SIM: 'simulation',
 });
 
-function nextSerial() {
-  store.serial += 1;
-  return String(store.serial).padStart(4, '0');
+async function nextSerial(db) {
+  if (!db) {
+    mem.serial += 1;
+    return String(mem.serial).padStart(4, '0');
+  }
+  const doc = await db
+    .collection('counters')
+    .findOneAndUpdate({ _id: 'register_serial' }, { $inc: { value: 1 } }, { upsert: true, returnDocument: 'after' });
+  return String(doc.value).padStart(4, '0');
 }
 
 /**
  * Append to the register. Returns the written entry.
  * Entries are never updated or deleted — a correction is a new entry.
  */
-export function record({ kind, actor = 'SYSTEM', designation = null, threadId = null, summary, detail = null, fileNo = INCIDENT.fileNo }) {
-  const entry = {
-    serial: nextSerial(),
-    kind,
-    actor,
-    designation,
-    threadId,
-    fileNo,
-    summary,
-    detail,
-    at: new Date().toISOString(),
-  };
-  store.register.push(entry);
-  if (store.register.length > 800) store.register.splice(0, store.register.length - 800);
+export async function record({
+  kind,
+  actor = 'SYSTEM',
+  designation = null,
+  threadId = null,
+  summary,
+  detail = null,
+  fileNo = INCIDENT.fileNo,
+}) {
+  const db = await getDb();
+  const serial = await nextSerial(db);
+  const entry = { serial, kind, actor, designation, threadId, fileNo, summary, detail, at: new Date().toISOString() };
+
+  if (!db) {
+    mem.register.push(entry);
+    if (mem.register.length > 800) mem.register.splice(0, mem.register.length - 800);
+    return entry;
+  }
+
+  await db.collection('register').insertOne({ ...entry });
   return entry;
 }
 
-export function register({ limit = 200, kind = null, threadId = null } = {}) {
-  let out = store.register;
-  if (kind) out = out.filter((e) => e.kind === kind);
-  if (threadId) out = out.filter((e) => e.threadId === threadId);
-  return out.slice(-limit).reverse();
+export async function register({ limit = 200, kind = null, threadId = null } = {}) {
+  const db = await getDb();
+
+  if (!db) {
+    let out = mem.register;
+    if (kind) out = out.filter((e) => e.kind === kind);
+    if (threadId) out = out.filter((e) => e.threadId === threadId);
+    return out.slice(-limit).reverse();
+  }
+
+  const filter = {};
+  if (kind) filter.kind = kind;
+  if (threadId) filter.threadId = threadId;
+  return db
+    .collection('register')
+    .find(filter, { projection: { _id: 0 } })
+    .sort({ serial: -1 })
+    .limit(limit)
+    .toArray();
 }
 
-export function registerCount() {
-  return store.register.length;
+export async function registerCount() {
+  const db = await getDb();
+  if (!db) return mem.register.length;
+  return db.collection('register').countDocuments();
 }
 
 /* ------------------------------------------------------------------ */
 /* Run tracking                                                        */
 /* ------------------------------------------------------------------ */
 
-export function saveRun(threadId, patch) {
-  const prev = store.runs.get(threadId) ?? { threadId, createdAt: Date.now() };
-  const next = { ...prev, ...patch, updatedAt: Date.now() };
-  store.runs.set(threadId, next);
-  if (store.runs.size > 50) {
-    const oldest = [...store.runs.entries()].sort((a, b) => a[1].updatedAt - b[1].updatedAt)[0];
-    if (oldest) store.runs.delete(oldest[0]);
+export async function saveRun(threadId, patch) {
+  const db = await getDb();
+
+  if (!db) {
+    const prev = mem.runs.get(threadId) ?? { threadId, createdAt: Date.now() };
+    const next = { ...prev, ...patch, updatedAt: Date.now() };
+    mem.runs.set(threadId, next);
+    if (mem.runs.size > 50) {
+      const oldest = [...mem.runs.entries()].sort((a, b) => a[1].updatedAt - b[1].updatedAt)[0];
+      if (oldest) mem.runs.delete(oldest[0]);
+    }
+    return next;
   }
-  return next;
+
+  const now = Date.now();
+  return db.collection('runs').findOneAndUpdate(
+    { threadId },
+    { $set: { ...patch, updatedAt: now }, $setOnInsert: { threadId, createdAt: now } },
+    { upsert: true, returnDocument: 'after', projection: { _id: 0 } }
+  );
 }
 
-export function getRun(threadId) {
-  return store.runs.get(threadId) ?? null;
+export async function getRun(threadId) {
+  const db = await getDb();
+  if (!db) return mem.runs.get(threadId) ?? null;
+  return db.collection('runs').findOne({ threadId }, { projection: { _id: 0 } });
 }
 
-export function listRuns() {
-  return [...store.runs.values()].sort((a, b) => b.updatedAt - a.updatedAt);
+export async function listRuns() {
+  const db = await getDb();
+  if (!db) return [...mem.runs.values()].sort((a, b) => b.updatedAt - a.updatedAt);
+  return db.collection('runs').find({}, { projection: { _id: 0 } }).sort({ updatedAt: -1 }).limit(50).toArray();
 }
 
 /** Seed the register so a cold start still shows a plausible shift history. */
-export function seedRegister() {
-  if (store.register.length) return;
-  const base = new Date('2026-09-08T01:40:00+05:30').getTime();
+export async function seedRegister() {
+  const db = await getDb();
   const seed = [
     [0, ENTRY_KINDS.RUN_START, 'SYSTEM', null, 'Incident file opened — Kamla Balan embankment breach reported by Water Resources Dept patrol.'],
     [7, ENTRY_KINDS.STAGE, 'SYSTEM', null, 'CWC Jhanjharpur gauge crossed warning level 48.80 m at 01:47 IST.'],
@@ -109,9 +153,33 @@ export function seedRegister() {
     [34, ENTRY_KINDS.SIM, 'SYSTEM', null, 'Drone survey round 1 tasked to 6 zones — GARUD 1/2, CHAKOR 1.'],
     [58, ENTRY_KINDS.STAGE, 'SYSTEM', null, 'Survey round 1 complete — 6 zones verified, 214 persons observed.'],
   ];
+  const base = new Date('2026-09-08T01:40:00+05:30').getTime();
+
+  if (!db) {
+    if (mem.register.length) return;
+    for (const [minutes, kind, actor, designation, summary] of seed) {
+      mem.register.push({
+        serial: await nextSerial(null),
+        kind,
+        actor,
+        designation,
+        threadId: null,
+        fileNo: INCIDENT.fileNo,
+        summary,
+        detail: null,
+        at: new Date(base + minutes * 60000).toISOString(),
+      });
+    }
+    return;
+  }
+
+  const count = await db.collection('register').countDocuments();
+  if (count) return;
+
+  const docs = [];
   for (const [minutes, kind, actor, designation, summary] of seed) {
-    store.register.push({
-      serial: nextSerial(),
+    docs.push({
+      serial: await nextSerial(db),
       kind,
       actor,
       designation,
@@ -122,4 +190,5 @@ export function seedRegister() {
       at: new Date(base + minutes * 60000).toISOString(),
     });
   }
+  await db.collection('register').insertMany(docs);
 }
