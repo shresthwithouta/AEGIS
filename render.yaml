@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: aegis-vision
+    runtime: python
+    plan: starter
+    rootDir: services/vision
+    buildCommand: >-
+      pip install --upgrade pip &&
+      pip install torch --index-url https://download.pytorch.org/whl/cpu &&
+      pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: AEGIS_DEVICE
+        value: cpu
+      - key: LOG_LEVEL
+        value: INFO
+      # Comma-separated list of origins allowed to call this service — set this
+      # to your Vercel deployment URL(s), e.g. https://aegis.vercel.app. Left as
+      # "*" until you do; tighten it once the frontend URL is known.
+      - key: AEGIS_ALLOWED_ORIGINS
+        value: "*"

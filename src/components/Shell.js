@@ -118,43 +118,62 @@ function IncidentClock() {
   );
 }
 
+const ALL_ITEMS = [{ href: '/', label: 'Situation', icon: 'layers' }, ...PHASES.flatMap((p) => p.items)];
+
 export default function Shell({ children, fileNo, reasoning }) {
   const pathname = usePathname();
-  const active = phaseOf(pathname);
 
   return (
     <div className="flex min-h-full flex-col">
-      {/* Masthead — the file's cover line */}
-      <header className="sticky top-0 z-30 border-b border-[var(--rule-strong)] bg-[var(--jacket)]/95 backdrop-blur-[2px]">
-        <div className="mx-auto flex max-w-[110rem] items-center gap-3 px-3 py-2 sm:px-5">
+      <header className="sticky top-0 z-30 border-b border-[var(--rule)] bg-[var(--jacket)]/92 backdrop-blur-md">
+        <div className="mx-auto flex max-w-[100rem] items-center gap-3 px-4 py-3 sm:px-6">
           <Link href="/" className="group flex items-center gap-2.5 no-underline">
-            <Icon name="aegis" size={22} style={{ color: 'var(--stamp)' }} />
-            <span className="flex flex-col leading-none">
-              <span className="font-[family-name:var(--font-narrow)] text-[1.0625rem] font-bold uppercase tracking-[0.2em] text-[var(--ink)]">
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] text-white"
+              style={{ background: 'var(--stamp)' }}
+            >
+              <Icon name="aegis" size={17} />
+            </span>
+            <span className="hidden flex-col leading-none sm:flex">
+              <span className="font-[family-name:var(--font-narrow)] text-[0.9375rem] font-bold tracking-[0.01em] text-[var(--ink)]">
                 Aegis
               </span>
-              <span className="mt-[0.1875rem] hidden font-[family-name:var(--font-narrow)] text-[0.5rem] uppercase tracking-[0.13em] text-[var(--ink-3)] lg:block">
-                Automated Emergency Guidance &amp; Intelligence Support
-              </span>
+              <span className="mt-0.5 text-[0.625rem] text-[var(--ink-3)]">District operations</span>
             </span>
           </Link>
 
-          <span className="mx-1 hidden h-7 w-px bg-[var(--rule)] sm:block" />
+          <nav aria-label="Sections" className="ml-2 flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
+            {ALL_ITEMS.map((item) => {
+              const on = pathname === item.href || (item.href !== '/' && pathname.startsWith(`${item.href}/`));
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={on ? 'page' : undefined}
+                  className="flex shrink-0 items-center gap-1.5 rounded-[var(--radius-sm)] px-2.5 py-1.5 no-underline transition-colors"
+                  style={
+                    on
+                      ? { background: 'var(--stamp-soft)', color: 'var(--stamp)' }
+                      : { color: 'var(--ink-3)' }
+                  }
+                >
+                  <Icon name={item.icon} size={13} />
+                  <span className="font-[family-name:var(--font-narrow)] text-[0.75rem] font-semibold whitespace-nowrap">
+                    {item.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </nav>
 
-          <div className="hidden min-w-0 flex-col leading-none sm:flex">
-            <span className="rail">F.No.</span>
-            <span className="truncate font-[family-name:var(--font-mono)] text-[0.6875rem] tracking-[0.04em] text-[var(--ink-2)]">
-              {fileNo}
-            </span>
-          </div>
-
-          <div className="ml-auto flex items-center gap-2.5 sm:gap-4">
-            <span className="hidden md:block">
+          <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+            <span className="hidden lg:block">
               <IncidentClock />
             </span>
             <Link
               href="/system"
-              className="hidden items-center gap-1.5 no-underline sm:flex"
+              className="hidden items-center gap-1.5 rounded-full px-2.5 py-1 no-underline sm:flex"
+              style={{ background: 'var(--sheet-sunk)' }}
               title={reasoning?.note}
             >
               <StatusDot
@@ -166,78 +185,22 @@ export default function Shell({ children, fileNo, reasoning }) {
             <ThemeToggle />
           </div>
         </div>
-
-        {/* The phase rail — one unbroken line, never wrapping */}
-        <nav aria-label="Disaster phase" className="border-t border-[var(--rule)]">
-          <div className="mx-auto flex max-w-[110rem] items-stretch overflow-x-auto px-3 sm:px-5">
-            <Link
-              href="/"
-              className={`flex shrink-0 items-center gap-1.5 border-b-2 px-2.5 py-1.5 no-underline ${
-                pathname === '/' ? 'border-[var(--stamp)] text-[var(--ink)]' : 'border-transparent text-[var(--ink-3)]'
-              }`}
-            >
-              <Icon name="layers" size={12} />
-              <span className="font-[family-name:var(--font-narrow)] text-[0.625rem] font-semibold uppercase tracking-[0.12em]">
-                Situation
-              </span>
-            </Link>
-
-            {PHASES.map((phase, i) => (
-              <div key={phase.id} className="flex shrink-0 items-stretch">
-                <span
-                  aria-hidden="true"
-                  className="my-1.5 w-px shrink-0 bg-[var(--rule)]"
-                  style={{ marginInline: '0.375rem' }}
-                />
-                <span className="flex shrink-0 items-center pr-2">
-                  <span
-                    className="font-[family-name:var(--font-narrow)] text-[0.5625rem] font-bold uppercase tracking-[0.16em]"
-                    style={{ color: active === phase.id ? 'var(--stamp)' : 'var(--ink-3)' }}
-                  >
-                    {phase.label}
-                  </span>
-                </span>
-                {phase.items.map((item) => {
-                  const on = pathname === item.href || pathname.startsWith(`${item.href}/`);
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      aria-current={on ? 'page' : undefined}
-                      className={`flex shrink-0 items-center gap-1.5 border-b-2 px-2.5 py-1.5 no-underline transition-colors ${
-                        on
-                          ? 'border-[var(--stamp)] text-[var(--ink)]'
-                          : 'border-transparent text-[var(--ink-3)] hover:text-[var(--ink)]'
-                      }`}
-                    >
-                      <Icon name={item.icon} size={12} />
-                      <span className="font-[family-name:var(--font-narrow)] text-[0.625rem] font-semibold uppercase tracking-[0.11em] whitespace-nowrap">
-                        {item.label}
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        </nav>
       </header>
 
-      <main className="mx-auto w-full max-w-[110rem] flex-1 px-3 py-5 sm:px-5 sm:py-7">{children}</main>
+      <main className="mx-auto w-full max-w-[100rem] flex-1 px-4 py-6 sm:px-6 sm:py-8">{children}</main>
 
-      <footer className="border-t border-[var(--rule)] px-3 py-4 sm:px-5">
-        <div className="mx-auto flex max-w-[110rem] flex-wrap items-center justify-between gap-3">
-          <p className="text-[0.6875rem] leading-[1.5] text-[var(--ink-3)]">
+      <footer className="border-t border-[var(--rule)] px-4 py-5 sm:px-6">
+        <div className="mx-auto flex max-w-[100rem] flex-wrap items-center justify-between gap-3">
+          <p className="text-[0.75rem] leading-[1.5] text-[var(--ink-3)]">
             AEGIS · Smart India Hackathon 2026 · Problem Statement 26206 · Team Sinchan.{' '}
-            <span className="text-[var(--ink-3)]">
-              All incident data is synthetic. Drone flight, dispatch transmission and imagery ingestion are simulated.
-            </span>
+            File {fileNo}. All incident data is synthetic; drone flight, dispatch transmission and imagery ingestion
+            are simulated.
           </p>
           <Link
             href="/system"
-            className="font-[family-name:var(--font-narrow)] text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-[var(--ink-3)]"
+            className="font-[family-name:var(--font-narrow)] text-[0.6875rem] font-semibold text-[var(--stamp)]"
           >
-            What is real and what is simulated
+            What is real and what is simulated →
           </Link>
         </div>
       </footer>

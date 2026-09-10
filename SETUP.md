@@ -108,15 +108,45 @@ audit register. Exits non-zero on failure, so it works in CI.
 
 ## Deploying
 
-**The app** deploys to Vercel as-is — push the repo, set `ANTHROPIC_API_KEY` in
-the project's environment variables, done. Do not set `VISION_SERVICE_URL`
-unless you have also hosted the Python service somewhere reachable.
+Two services, two hosts. Neither depends on the other to come up first.
 
-**The vision service** needs a container host that allows a ~2 GB image
-(Render, Railway, Fly.io — not Vercel, which has no PyTorch runtime). If you
-host it, set `VISION_SERVICE_URL` to its public URL. If you do not, the app
-degrades cleanly and says so.
+### 1. The app → Vercel
 
-For a hackathon demo, running both locally is the right call — the vision
-service is the slowest thing to cold-start on a free tier, and a judge watching
-a 40-second wake-up is worse than not showing it at all.
+1. Push this repo to GitHub (or GitLab/Bitbucket).
+2. In Vercel, **New Project** → import the repo. Framework preset `Next.js` is
+   auto-detected; the `build`/`start` scripts in `package.json` need no
+   changes.
+3. Set environment variables on the Vercel project (Project → Settings →
+   Environment Variables):
+   - `ANTHROPIC_API_KEY` — optional, turns on the reasoning layer.
+   - `VISION_SERVICE_URL` — optional, only set this once step 2 below has given
+     you the Render service's public URL. Leave it unset otherwise; the app
+     degrades cleanly and says so on `/system`.
+4. Deploy. That's the whole app — no database, no map API key, nothing else
+   to configure.
+
+### 2. The vision service → Render
+
+`render.yaml` at the repo root already describes this service (Python
+runtime, CPU-only PyTorch wheel, `/health` check). In Render:
+
+1. **New** → **Blueprint** → point it at this repo. Render reads `render.yaml`
+   and proposes the `aegis-vision` web service with `rootDir: services/vision`.
+2. Deploy it. First build installs PyTorch + ultralytics, which takes several
+   minutes; first cold start after idling is the slow part on a free/starter
+   plan (30–60s while models load).
+3. Once it's up, copy its URL (`https://aegis-vision-xxxx.onrender.com`) and:
+   - Set it as `VISION_SERVICE_URL` on the Vercel project (step 3 above), and
+     redeploy the app so the new env var takes effect.
+   - Set `AEGIS_ALLOWED_ORIGINS` on the Render service to your Vercel URL
+     (e.g. `https://your-app.vercel.app`) instead of the default `*`, so the
+     vision service only answers the app's own origin.
+
+A container host that allows a ~2 GB image is required (Render, Railway,
+Fly.io — not Vercel, which has no PyTorch runtime); `render.yaml` targets
+Render specifically but the same `services/vision` directory runs anywhere
+that can `pip install -r requirements.txt` and serve `uvicorn app:app`.
+
+For a hackathon demo, running both locally is still the right call for
+judging — the vision service is the slowest thing to cold-start on a free
+tier, and a 40-second wake-up mid-demo is worse than not showing it live.

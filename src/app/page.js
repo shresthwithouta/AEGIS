@@ -37,13 +37,13 @@ export default function SituationPage() {
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <PageHead
         title={INCIDENT.name}
         standfirst={`${INCIDENT.hazard} · ${INCIDENT.district}, ${INCIDENT.state} · ${INCIDENT.basin} basin`}
         fileNo={INCIDENT.fileNo}
         right={
-          <span className="flex items-center gap-2.5">
+          <span className="flex items-center gap-2.5 rounded-full px-3 py-1.5" style={{ background: 'var(--sheet-sunk)' }}>
             <StatusDot tone="halt" pulse label="Active" />
             <span className="rail">Declared {declared} IST</span>
           </span>
@@ -51,15 +51,12 @@ export default function SituationPage() {
       />
 
       {/* Status line — the numbers a duty officer is asked for out loud */}
-      <div className="grid grid-cols-2 border border-[var(--rule)] bg-[var(--sheet)] sm:grid-cols-4 lg:grid-cols-7">
-        {kpis.map((k, i) => (
-          <div
-            key={k.label}
-            className="border-b border-r border-[var(--rule)] px-3 py-2 last:border-r-0 lg:border-b-0"
-          >
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+        {kpis.map((k) => (
+          <div key={k.label} className="sheet px-3.5 py-3">
             <span className="field-label block">{k.label}</span>
             <span
-              className="mt-0.5 block font-[family-name:var(--font-mono)] text-[1.125rem] font-semibold tabular-nums"
+              className="mt-1 block font-[family-name:var(--font-mono)] text-[1.25rem] font-semibold tabular-nums"
               style={{ color: k.tone ?? 'var(--ink)' }}
             >
               {k.value}

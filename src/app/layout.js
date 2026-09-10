@@ -35,33 +35,23 @@ export const viewport = {
 const THEME_BOOT = `(function(){try{var t=localStorage.getItem('aegis-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){}})();`;
 
 const DIRECTION_CONTRACT = `<!--
-AEGIS · direction contract · seed f17832f9 · assigned index 5 of 7
+AEGIS · direction contract (revised)
 
-THESIS: A disaster response system whose product is a signed, auditable order —
-so the interface is the government file that carries it, not the glowing map
-every disaster dashboard reaches for. It refuses the dark mission-control
-template and its opposite, the white tricolour portal.
+THESIS: A disaster response system whose product is a signed, auditable order.
+The interface is a modern operations dashboard — rounded cards, real
+whitespace, clear hierarchy — so a duty officer can scan it fast under
+pressure, not a themed government-file pastiche.
 
-OWN-WORLD: The Indian district file as a screen grammar. Ruled columns and
-hairlines instead of cards; a numbered margin rail on every register; violet
-stamp-pad ink for authority, red-tape crimson for halt, file green for verified,
-on a noting-sheet ground by day and an ink ground at night. Archivo and Archivo
-Narrow for the form, Azeret Mono for every figure, tabular numerals throughout.
+STORY: A duty officer sees which zones are worst and why the arithmetic says
+so, sends drones to the ones nobody has confirmed, reads a resource
+recommendation with its trade-offs named, and stamps it — twice — before
+anything moves. The approval gates remain deliberate, physical holds; only
+their skin changed, from an ink stamp to a clean confirmation action.
 
-STORY: A duty officer sees which zones are worst and why the arithmetic says so,
-sends drones to the ones nobody has confirmed, reads a resource recommendation
-with its trade-offs named, and stamps it — twice — before anything moves.
-
-FIRST VIEWPORT: Masthead carrying the file number; the unbroken five-stage rail
-with a 'now' marker; the 100-zone grid at full scale on the left with severity
-in the cell edges; the priority register ruled beside it. The primary action —
-open the pipeline — sits at the top right of the situation sheet.
-
-FORM: The signed government file. Candidate 5 of 7 on my ordered list, assigned
-by the roll. Seed key f17832f9.
-
-FINISH: unreviewed and undocumented is unfinished; this build ends with the
-finish review, the verdict, and DESIGN.md
+FORM: Modern dashboard. Cards (Sheet), tinted pill badges for status/severity,
+soft shadows, generous padding. Archivo / Archivo Narrow for text, Azeret Mono
+for every figure, tabular numerals throughout — unchanged from the previous
+direction, since the type system was never the problem.
 -->`;
 
 export default function RootLayout({ children }) {

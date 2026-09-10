@@ -1,73 +1,66 @@
 @import 'tailwindcss';
 
 /* ==================================================================
-   AEGIS — "The Signed Order"
+   AEGIS — modern operations dashboard
 
-   The visual world is the Indian government file, translated into an
-   operations console. Not rendered as paper: translated as a grammar.
-
-     · Ruled columns and hairlines carry structure. There are no cards.
-     · Every record has a serial in a margin rail, because a file numbers
-       everything and because that is literally what an audit trail is.
-     · Colour lives in rules, chips and edges. The reading field stays
-       achromatic so dense numbers stay legible under pressure.
-     · Approval is a stamp — a material act that leaves an impression.
-
-   Two grounds, both real use scenes: DAY is a bright district control room
-   with the screen mirrored to a wall; NIGHT is the same desk at 03:00 with
-   the room lights down. Same grammar, different ground.
+   Clean cards, real whitespace, soft shadows, rounded corners. Colour
+   carries meaning (severity, status, approval) without competing with
+   the data — chips and badges use a tinted fill, never a raw block.
    ================================================================== */
 
 :root {
   color-scheme: light;
 
-  /* Ground — the file board and the sheet clipped to it */
-  --jacket: #d9ddd2;
-  --jacket-edge: #cbd0c2;
-  --sheet: #f3f5ef;
-  --sheet-raised: #fafbf7;
-  --sheet-sunk: #e9ece3;
+  /* Ground */
+  --jacket: #eef0f4;
+  --jacket-edge: #e2e5ec;
+  --sheet: #ffffff;
+  --sheet-raised: #ffffff;
+  --sheet-sunk: #f4f5f8;
 
   /* Ink */
-  --ink: #16211c;
-  --ink-2: #3f4b45;
-  --ink-3: #53605a;
-  /* Marks only — hairline glyphs, disabled states, decorative rules.
-     Never text: it clears 4.5:1 on the sheet grounds but not on the jacket. */
-  --ink-4: #616e68;
+  --ink: #111827;
+  --ink-2: #4b5563;
+  --ink-3: #6b7280;
+  --ink-4: #9aa1b0;
 
-  /* Rules — the ledger's skeleton */
-  --rule: #c2cabb;
-  --rule-soft: #d6dccf;
-  --rule-strong: #97a292;
-  --rule-ink: #16211c;
+  /* Rules */
+  --rule: #e5e7eb;
+  --rule-soft: #eef0f3;
+  --rule-strong: #d1d5db;
+  --rule-ink: #111827;
 
-  /* The file's own materials */
-  --stamp: #5b2d8e; /* violet stamp-pad ink */
-  --stamp-soft: #5b2d8e26;
-  --tape: #b4232a; /* red tape */
-  --seal: #0f5c4a; /* file green — verified, approved */
-  --pencil: #3a5a7c; /* blue pencil — provisional marks */
+  /* Accent & semantic */
+  --stamp: #4f46e5; /* primary accent — approvals, active state, focus */
+  --stamp-soft: #4f46e514;
+  --tape: #dc2626; /* danger */
+  --seal: #059669; /* success / verified */
+  --pencil: #2563eb; /* informational / provisional */
 
   /* Severity ramp */
-  --sev-clear: #84958f;
-  --sev-monitor: #d9ae3c;
-  --sev-elevated: #ce8617;
-  --sev-severe: #be5010;
-  --sev-critical: #96161d;
-  --water: #1d6088;
+  --sev-clear: #94a3b8;
+  --sev-monitor: #eab308;
+  --sev-elevated: #f97316;
+  --sev-severe: #ef4444;
+  --sev-critical: #b91c1c;
+  --water: #0ea5e9;
 
   /* Status */
-  --live: #0f5c4a;
-  --sim: #a3206b;
-  --warn: #785710;
-  --halt: #b8202c;
+  --live: #059669;
+  --sim: #a855f7;
+  --warn: #d97706;
+  --halt: #dc2626;
 
-  --control-edge: #6b786d;
-  --focus: #5b2d8e;
-  --shadow-1: 0 1px 2px #16211c14, 0 2px 6px #16211c0f;
-  --shadow-2: 0 2px 4px #16211c1a, 0 8px 20px #16211c14;
-  --stamp-shadow: 0 1px 1px #5b2d8e33;
+  --control-edge: #d1d5db;
+  --focus: #4f46e5;
+  --shadow-1: 0 1px 2px #0f172a0a, 0 1px 3px #0f172a0f;
+  --shadow-2: 0 8px 24px #0f172a14, 0 2px 6px #0f172a0a;
+  --stamp-shadow: 0 6px 16px #4f46e533;
+
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-full: 999px;
 
   --rail: 3.25rem;
   --hair: 1px;
@@ -78,90 +71,90 @@
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
 
-    --jacket: #0d1116;
-    --jacket-edge: #070a0d;
-    --sheet: #141a20;
-    --sheet-raised: #1a222a;
-    --sheet-sunk: #0f151a;
+    --jacket: #0a0d14;
+    --jacket-edge: #05070b;
+    --sheet: #12151d;
+    --sheet-raised: #151924;
+    --sheet-sunk: #0d0f16;
 
-    --ink: #e3e9e4;
-    --ink-2: #b3bdb7;
-    --ink-3: #7f8c86;
-    --ink-4: #7c8983;
+    --ink: #e8eaf0;
+    --ink-2: #a3a9ba;
+    --ink-3: #7d8399;
+    --ink-4: #5b6178;
 
-    --rule: #2a343c;
-    --rule-soft: #202930;
-    --rule-strong: #3d4a53;
-    --rule-ink: #e3e9e4;
+    --rule: #232838;
+    --rule-soft: #1a1e2a;
+    --rule-strong: #2e3448;
+    --rule-ink: #e8eaf0;
 
-    --stamp: #a97ce8;
-    --stamp-soft: #a97ce826;
-    --tape: #ea666b;
-    --seal: #3fbf9b;
-    --pencil: #7aa8d0;
+    --stamp: #818cf8;
+    --stamp-soft: #818cf826;
+    --tape: #f87171;
+    --seal: #34d399;
+    --pencil: #60a5fa;
 
-    --sev-clear: #697872;
-    --sev-monitor: #87801f;
-    --sev-elevated: #d6ae24;
-    --sev-severe: #e5613a;
-    --sev-critical: #ff97a4;
-    --water: #4d94c4;
+    --sev-clear: #64748b;
+    --sev-monitor: #f2c94c;
+    --sev-elevated: #fb923c;
+    --sev-severe: #f87171;
+    --sev-critical: #fca5a5;
+    --water: #38bdf8;
 
-    --live: #3fbf9b;
-    --sim: #f28ac6;
-    --warn: #d8a63a;
-    --halt: #ff5a63;
+    --live: #34d399;
+    --sim: #c084fc;
+    --warn: #fbbf24;
+    --halt: #f87171;
 
-    --control-edge: #647178;
-    --focus: #a97ce8;
-    --shadow-1: 0 1px 2px #00000059, 0 2px 8px #0000003d;
-    --shadow-2: 0 2px 6px #00000073, 0 10px 28px #0000004d;
-    --stamp-shadow: 0 1px 2px #a97ce833;
+    --control-edge: #2e3448;
+    --focus: #818cf8;
+    --shadow-1: 0 1px 2px #00000040, 0 2px 6px #00000030;
+    --shadow-2: 0 12px 32px #00000055, 0 2px 8px #00000040;
+    --stamp-shadow: 0 8px 20px #818cf840;
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --jacket: #0d1116;
-  --jacket-edge: #070a0d;
-  --sheet: #141a20;
-  --sheet-raised: #1a222a;
-  --sheet-sunk: #0f151a;
+  --jacket: #0a0d14;
+  --jacket-edge: #05070b;
+  --sheet: #12151d;
+  --sheet-raised: #151924;
+  --sheet-sunk: #0d0f16;
 
-  --ink: #e3e9e4;
-  --ink-2: #b3bdb7;
-  --ink-3: #7f8c86;
-  --ink-4: #7c8983;
+  --ink: #e8eaf0;
+  --ink-2: #a3a9ba;
+  --ink-3: #7d8399;
+  --ink-4: #5b6178;
 
-  --rule: #2a343c;
-  --rule-soft: #202930;
-  --rule-strong: #3d4a53;
-  --rule-ink: #e3e9e4;
+  --rule: #232838;
+  --rule-soft: #1a1e2a;
+  --rule-strong: #2e3448;
+  --rule-ink: #e8eaf0;
 
-  --stamp: #a97ce8;
-  --stamp-soft: #a97ce826;
-  --tape: #ea666b;
-  --seal: #3fbf9b;
-  --pencil: #7aa8d0;
+  --stamp: #818cf8;
+  --stamp-soft: #818cf826;
+  --tape: #f87171;
+  --seal: #34d399;
+  --pencil: #60a5fa;
 
-  --sev-clear: #697872;
-  --sev-monitor: #87801f;
-  --sev-elevated: #d6ae24;
-  --sev-severe: #e5613a;
-  --sev-critical: #ff97a4;
-  --water: #4d94c4;
+  --sev-clear: #64748b;
+  --sev-monitor: #f2c94c;
+  --sev-elevated: #fb923c;
+  --sev-severe: #f87171;
+  --sev-critical: #fca5a5;
+  --water: #38bdf8;
 
-  --live: #3fbf9b;
-  --sim: #f28ac6;
-  --warn: #d8a63a;
-  --halt: #ff5a63;
+  --live: #34d399;
+  --sim: #c084fc;
+  --warn: #fbbf24;
+  --halt: #f87171;
 
-  --control-edge: #647178;
-  --focus: #a97ce8;
-  --shadow-1: 0 1px 2px #00000059, 0 2px 8px #0000003d;
-  --shadow-2: 0 2px 6px #00000073, 0 10px 28px #0000004d;
-  --stamp-shadow: 0 1px 2px #a97ce833;
+  --control-edge: #2e3448;
+  --focus: #818cf8;
+  --shadow-1: 0 1px 2px #00000040, 0 2px 6px #00000030;
+  --shadow-2: 0 12px 32px #00000055, 0 2px 8px #00000040;
+  --stamp-shadow: 0 8px 20px #818cf840;
 }
 
 @theme inline {
@@ -222,8 +215,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Every figure in this system is compared against another figure in the
-   row above it. Tabular numerals are not a nicety here. */
 table,
 [data-numeric],
 .num {
@@ -233,12 +224,7 @@ table,
 
 ::selection {
   background: var(--stamp);
-  color: var(--sheet-raised);
-}
-
-:root[data-theme='dark'] ::selection {
-  background: var(--stamp);
-  color: #0d1116;
+  color: #ffffff;
 }
 
 input,
@@ -249,10 +235,9 @@ textarea {
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 1px;
+  border-radius: 4px;
 }
 
-/* Scrollbars belong to the design, not to the browser. */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--rule-strong) transparent;
@@ -265,12 +250,13 @@ textarea {
   background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background: var(--rule);
+  background: var(--rule-strong);
   border: 3px solid transparent;
+  border-radius: 99px;
   background-clip: content-box;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--rule-strong);
+  background: var(--ink-4);
   border: 3px solid transparent;
   background-clip: content-box;
 }
@@ -286,82 +272,54 @@ a {
 }
 
 /* ------------------------------------------------------------------ */
-/* The file grammar                                                    */
+/* Cards                                                               */
 /* ------------------------------------------------------------------ */
 
-/* A sheet: the ruled field data sits on. Squared, hairlined, never a card. */
 .sheet {
   background: var(--sheet);
   border: var(--hair) solid var(--rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
 }
 
 .sheet-raised {
   background: var(--sheet-raised);
   border: var(--hair) solid var(--rule);
-  box-shadow: var(--shadow-1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
 }
 
-/* Registration ticks — a file's punched corners, and the mark a print shop
-   uses to prove the sheet is aligned. They earn their place by marking which
-   panel currently holds the operation. */
-.ticked {
-  position: relative;
-}
-.ticked::before,
-.ticked::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 0;
-  pointer-events: none;
+.sheet[data-active='true'],
+.sheet-raised[data-active='true'] {
   border-color: var(--stamp);
-  border-style: solid;
-  opacity: 0;
-  transition: opacity 140ms ease-out;
-}
-.ticked::before {
-  top: -1px;
-  left: -1px;
-  border-width: 1px 0 0 1px;
-}
-.ticked::after {
-  bottom: -1px;
-  right: -1px;
-  border-width: 0 1px 1px 0;
-}
-.ticked[data-active='true']::before,
-.ticked[data-active='true']::after {
-  width: 9px;
-  height: 9px;
-  opacity: 1;
+  box-shadow: 0 0 0 3px var(--stamp-soft), var(--shadow-2);
 }
 
-/* Column heads on a ruled register */
 .colhead {
   font-family: var(--font-narrow);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-3);
   line-height: 1.2;
 }
 
-/* The margin rail — where a file carries its serials and the officer initials */
 .rail {
   font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.02em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.01em;
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
 
-/* Field label / value pair, the unit of a government form */
 .field-label {
   font-family: var(--font-narrow);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.11em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-3);
 }
@@ -373,47 +331,36 @@ a {
 }
 
 /* ------------------------------------------------------------------ */
-/* The stamp                                                           */
+/* Approval stamp — a clean, confident badge, not literal ink          */
 /* ------------------------------------------------------------------ */
 
-/* A real impression: double-ruled border, violet ink, sat at a slight angle,
-   multiplied into the sheet so it reads as ink on the page rather than a
-   sticker over it. */
 .stamp {
-  --stamp-rot: -1.5deg;
   position: relative;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   gap: 0.125rem;
-  padding: 0.5rem 1rem;
-  border: 2px solid var(--stamp);
-  box-shadow: inset 0 0 0 1px var(--stamp);
-  color: var(--stamp);
+  padding: 0.5rem 1.125rem;
+  border-radius: var(--radius);
+  background: var(--seal);
+  color: #ffffff;
   font-family: var(--font-narrow);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  transform: rotate(var(--stamp-rot));
-  mix-blend-mode: multiply;
-  opacity: 0.92;
-}
-:root[data-theme='dark'] .stamp {
-  mix-blend-mode: screen;
+  letter-spacing: 0.1em;
+  box-shadow: var(--shadow-2);
 }
 .stamp[data-tone='reject'] {
-  border-color: var(--tape);
-  box-shadow: inset 0 0 0 1px var(--tape);
-  color: var(--tape);
+  background: var(--tape);
 }
 
 @keyframes stamp-land {
   from {
     opacity: 0;
-    transform: rotate(var(--stamp-rot)) scale(1.06);
+    transform: scale(0.85);
   }
   to {
-    opacity: 0.92;
-    transform: rotate(var(--stamp-rot)) scale(1);
+    opacity: 1;
+    transform: scale(1);
   }
 }
 .stamp[data-land='true'] {
@@ -427,7 +374,7 @@ a {
 }
 
 /* ------------------------------------------------------------------ */
-/* Severity — colour in the edge, never behind the numbers              */
+/* Severity — a tinted pill, colour and label both carry the meaning   */
 /* ------------------------------------------------------------------ */
 
 [data-band='clear'] {
@@ -446,32 +393,37 @@ a {
   --band: var(--sev-critical);
 }
 
-/* The band colour lives in the border and the edge rule; the label itself is
-   ink. Putting the severity ramp into 9px text was legible for the dark end of
-   the ramp and not for the light end — Monitor came out at 1.9:1 — and "the
-   chip is labelled" is no relief when the label is the failing colour. */
 .band-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.3125rem;
-  padding: 0.0625rem 0.375rem;
-  border: 1px solid var(--band, var(--rule-strong));
-  box-shadow: inset 2px 0 0 var(--band, transparent);
-  color: var(--ink);
+  gap: 0.375rem;
+  padding: 0.1875rem 0.5625rem;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--band, var(--rule-strong)) 14%, transparent);
+  color: color-mix(in srgb, var(--band, var(--ink-2)) 78%, var(--ink) 22%);
   font-family: var(--font-narrow);
-  font-size: 0.5625rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
 }
+.band-chip::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--band, var(--ink-3));
+  flex-shrink: 0;
+}
 
 .band-edge {
-  box-shadow: inset 2px 0 0 var(--band, transparent);
+  box-shadow: inset 3px 0 0 var(--band, transparent);
+  border-radius: 3px;
 }
 
 /* ------------------------------------------------------------------ */
-/* Controls, in the form's own vocabulary                              */
+/* Controls                                                            */
 /* ------------------------------------------------------------------ */
 
 .btn {
@@ -479,63 +431,71 @@ a {
   align-items: center;
   justify-content: center;
   gap: 0.4375rem;
-  padding: 0.4375rem 0.8125rem;
+  padding: 0.5rem 0.9375rem;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--control-edge);
   background: var(--sheet-raised);
-  color: var(--ink);
-  font-family: var(--font-narrow);
-  font-size: 0.6875rem;
+  color: var(--ink-2);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
-  transition: background 120ms ease-out, border-color 120ms ease-out, color 120ms ease-out;
+  transition: background 120ms ease-out, border-color 120ms ease-out, color 120ms ease-out, box-shadow 120ms ease-out;
 }
 .btn:hover:not(:disabled) {
-  border-color: var(--ink-2);
+  border-color: var(--ink-4);
   background: var(--sheet-sunk);
+  color: var(--ink);
 }
 .btn:active:not(:disabled) {
   background: var(--sheet-sunk);
-  box-shadow: inset 0 1px 2px #16211c1f;
+  box-shadow: inset 0 1px 2px #0000000f;
 }
 .btn:disabled {
   opacity: 0.42;
   cursor: not-allowed;
 }
 .btn[data-tone='primary'] {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--sheet);
+  background: var(--stamp);
+  border-color: var(--stamp);
+  color: #ffffff;
+  box-shadow: 0 1px 2px #0000001a;
 }
 .btn[data-tone='primary']:hover:not(:disabled) {
-  background: var(--ink-2);
-  border-color: var(--ink-2);
+  background: color-mix(in srgb, var(--stamp) 88%, black 12%);
+  border-color: color-mix(in srgb, var(--stamp) 88%, black 12%);
+  color: #ffffff;
 }
 .btn[data-tone='stamp'] {
   border-color: var(--stamp);
   color: var(--stamp);
+  background: var(--stamp-soft);
 }
 .btn[data-tone='stamp']:hover:not(:disabled) {
-  background: var(--stamp-soft);
+  background: color-mix(in srgb, var(--stamp) 18%, transparent);
   border-color: var(--stamp);
+  color: var(--stamp);
 }
 .btn[data-tone='danger'] {
-  border-color: var(--tape);
+  border-color: color-mix(in srgb, var(--tape) 45%, var(--rule));
   color: var(--tape);
+  background: color-mix(in srgb, var(--tape) 6%, transparent);
 }
 .btn[data-tone='danger']:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--tape) 10%, transparent);
+  background: color-mix(in srgb, var(--tape) 12%, transparent);
+  border-color: var(--tape);
 }
 
 .input {
   width: 100%;
-  padding: 0.4375rem 0.625rem;
+  padding: 0.5rem 0.75rem;
   background: var(--sheet-raised);
-  border: 1px solid var(--rule);
-  border-bottom-color: var(--rule-strong);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
   color: var(--ink);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.8125rem;
 }
 .input::placeholder {
@@ -544,49 +504,52 @@ a {
 .input:focus {
   border-color: var(--stamp);
   outline: none;
-  box-shadow: 0 0 0 2px var(--stamp-soft);
+  box-shadow: 0 0 0 3px var(--stamp-soft);
 }
 
-/* Range control — a form's slide rule, not a rounded toy */
+/* Range control — a modern rounded slider */
 .slide {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
   height: 18px;
   background: transparent;
-  cursor: ew-resize;
+  cursor: pointer;
 }
 .slide::-webkit-slider-runnable-track {
-  height: 3px;
-  background: var(--rule);
-  border-top: 1px solid var(--control-edge);
+  height: 4px;
+  background: var(--rule-strong);
+  border-radius: 999px;
 }
 .slide::-moz-range-track {
-  height: 3px;
-  background: var(--rule);
+  height: 4px;
+  background: var(--rule-strong);
+  border-radius: 999px;
 }
 .slide::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 3px;
+  width: 15px;
   height: 15px;
-  margin-top: -7px;
+  margin-top: -5.5px;
   background: var(--stamp);
-  border: none;
-  border-radius: 0;
+  border: 2px solid var(--sheet-raised);
+  border-radius: 999px;
+  box-shadow: 0 1px 3px #0000002a;
 }
 .slide::-moz-range-thumb {
-  width: 3px;
+  width: 15px;
   height: 15px;
   background: var(--stamp);
-  border: none;
-  border-radius: 0;
+  border: 2px solid var(--sheet-raised);
+  border-radius: 999px;
+  box-shadow: 0 1px 3px #0000002a;
 }
 .slide:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 3px var(--stamp-soft);
+  box-shadow: 0 0 0 4px var(--stamp-soft);
 }
 
 /* ------------------------------------------------------------------ */
-/* Motion — one authored moment, plus honest state feedback            */
+/* Motion                                                              */
 /* ------------------------------------------------------------------ */
 
 @keyframes rule-draw {
@@ -644,15 +607,8 @@ a {
 }
 
 .hatch {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 5px,
-    var(--rule) 5px,
-    var(--rule) 6px
-  );
+  background: color-mix(in srgb, var(--halt) 6%, transparent);
 }
-
 
 .sr-only {
   position: absolute;

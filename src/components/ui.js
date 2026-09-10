@@ -1,9 +1,9 @@
 /**
- * Shared primitives in the file grammar.
+ * Shared primitives for the dashboard.
  *
- * There is no Card here on purpose. Structure is carried by ruled columns,
- * hairlines and a numbered margin rail — the way a register carries it — so a
- * screen full of these reads as one document rather than a tray of tiles.
+ * Every screen is built from these: a rounded card (Sheet), a card header, a
+ * label/value row (Field), and a handful of small badges. Keeping them here
+ * means a change to the look of a card changes every screen at once.
  */
 
 import Icon from './Icon';
@@ -15,7 +15,7 @@ import Icon from './Icon';
 export function Sheet({ children, className = '', active = false, raised = false, ...rest }) {
   return (
     <section
-      className={`ticked ${raised ? 'sheet-raised' : 'sheet'} ${className}`}
+      className={`${raised ? 'sheet-raised' : 'sheet'} ${className}`}
       data-active={active ? 'true' : undefined}
       {...rest}
     >
@@ -24,17 +24,14 @@ export function Sheet({ children, className = '', active = false, raised = false
   );
 }
 
-/**
- * A sheet's head. The label sits on the rule, the way a form's caption sits on
- * the ruled line above its field block.
- */
+/** A card's header. */
 export function SheetHead({ title, meta, action, sub }) {
   return (
-    <header className="flex items-baseline gap-3 border-b border-[var(--rule)] px-3 py-2">
-      <h2 className="font-[family-name:var(--font-narrow)] text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-[var(--ink)]">
+    <header className="flex items-baseline gap-3 border-b border-[var(--rule)] px-4 py-3">
+      <h2 className="font-[family-name:var(--font-narrow)] text-[0.8125rem] font-bold tracking-[0.01em] text-[var(--ink)]">
         {title}
       </h2>
-      {sub ? <span className="text-[0.6875rem] text-[var(--ink-3)]">{sub}</span> : null}
+      {sub ? <span className="text-[0.75rem] text-[var(--ink-3)]">{sub}</span> : null}
       <div className="ml-auto flex items-center gap-3">
         {meta ? <span className="rail">{meta}</span> : null}
         {action}
@@ -43,13 +40,13 @@ export function SheetHead({ title, meta, action, sub }) {
   );
 }
 
-/** Page title block. No eyebrow above it — the heading carries its own weight. */
+/** Page title block. */
 export function PageHead({ title, standfirst, fileNo, right }) {
   return (
-    <div className="border-b border-[var(--rule-strong)] pb-4">
+    <div className="pb-1">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-[62ch]">
-          <h1 className="font-[family-name:var(--font-narrow)] text-[1.75rem] font-bold uppercase leading-[1.05] tracking-[-0.01em] text-[var(--ink)] sm:text-[2.125rem]">
+          <h1 className="font-[family-name:var(--font-narrow)] text-[1.625rem] font-bold leading-[1.1] tracking-[-0.015em] text-[var(--ink)] sm:text-[1.875rem]">
             {title}
           </h1>
           {standfirst ? (
@@ -60,8 +57,8 @@ export function PageHead({ title, standfirst, fileNo, right }) {
       </div>
       {fileNo ? (
         <div className="mt-3 flex items-center gap-2">
-          <span className="rail">F.No.</span>
-          <span className="font-[family-name:var(--font-mono)] text-[0.6875rem] tracking-[0.06em] text-[var(--ink-2)]">
+          <span className="rail text-[var(--ink-4)]">File</span>
+          <span className="font-[family-name:var(--font-mono)] text-[0.75rem] tracking-[0.02em] text-[var(--ink-3)]">
             {fileNo}
           </span>
         </div>
@@ -74,10 +71,10 @@ export function PageHead({ title, standfirst, fileNo, right }) {
 /* Register rows                                                       */
 /* ------------------------------------------------------------------ */
 
-/** Label / value on one ruled line — the atom of a government form. */
+/** Label / value on one row. */
 export function Field({ label, value, mono = true, tone, title }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 border-b border-[var(--rule-soft)] px-3 py-[0.4375rem] last:border-b-0">
+    <div className="flex items-baseline justify-between gap-3 border-b border-[var(--rule-soft)] px-4 py-2.5 last:border-b-0">
       <span className="field-label shrink-0">{label}</span>
       <span
         className={`${mono ? 'field-value' : 'text-[0.8125rem]'} text-right`}
@@ -111,11 +108,11 @@ export function StatusDot({ tone = 'live', pulse = false, label }) {
       <span
         aria-hidden="true"
         className={pulse ? 'pulse' : undefined}
-        style={{ width: 6, height: 6, background: colour, display: 'inline-block' }}
+        style={{ width: 7, height: 7, borderRadius: 999, background: colour, display: 'inline-block' }}
       />
       {label ? (
         <span
-          className="font-[family-name:var(--font-narrow)] text-[0.5625rem] font-semibold uppercase tracking-[0.11em]"
+          className="font-[family-name:var(--font-narrow)] text-[0.6875rem] font-semibold tracking-[0.01em]"
           style={{ color: colour }}
         >
           {label}
@@ -127,9 +124,8 @@ export function StatusDot({ tone = 'live', pulse = false, label }) {
 
 /**
  * The provenance mark. Every figure produced by a model rather than by
- * arithmetic wears one, and every simulated subsystem says so, because the
- * dossier's own action list says an accurate scope holds up better under
- * questioning than an implied claim.
+ * arithmetic wears one, and every simulated subsystem says so — an accurate
+ * scope holds up better under questioning than an implied claim.
  */
 export function Provenance({ kind, detail }) {
   const map = {
@@ -150,11 +146,11 @@ export function Provenance({ kind, detail }) {
 
   return (
     <span
-      className="inline-flex items-center gap-1 border px-1.5 py-[0.0625rem] font-[family-name:var(--font-narrow)] text-[0.5625rem] font-semibold uppercase tracking-[0.1em]"
-      style={{ borderColor: colour, color: colour }}
+      className="inline-flex items-center gap-1.5 rounded-full px-2 py-[0.1875rem] font-[family-name:var(--font-narrow)] text-[0.625rem] font-semibold tracking-[0.01em]"
+      style={{ background: `color-mix(in srgb, ${colour} 14%, transparent)`, color: colour }}
       title={detail}
     >
-      <Icon name={m.icon} size={9} />
+      <Icon name={m.icon} size={10} />
       {m.label}
     </span>
   );
@@ -174,7 +170,7 @@ export function Register({ columns, children, className = '' }) {
               <th
                 key={c.key}
                 scope="col"
-                className={`colhead whitespace-nowrap px-2.5 py-1.5 ${c.align === 'right' ? 'text-right' : ''}`}
+                className={`colhead whitespace-nowrap px-3 py-2 ${c.align === 'right' ? 'text-right' : ''}`}
                 style={c.width ? { width: c.width } : undefined}
               >
                 {c.label}
@@ -191,7 +187,7 @@ export function Register({ columns, children, className = '' }) {
 export function Cell({ children, align, mono = false, className = '', ...rest }) {
   return (
     <td
-      className={`px-2.5 py-[0.4375rem] align-middle text-[0.75rem] ${
+      className={`px-3 py-2 align-middle text-[0.75rem] ${
         mono ? 'font-[family-name:var(--font-mono)] tabular-nums' : ''
       } ${align === 'right' ? 'text-right' : ''} ${className}`}
       {...rest}
@@ -205,24 +201,21 @@ export function Cell({ children, align, mono = false, className = '', ...rest })
 /* Bars and meters                                                     */
 /* ------------------------------------------------------------------ */
 
-/**
- * A proportion, drawn as a ruled bar rather than a rounded pill.
- * Colour sits in the fill and the baseline rule only — never behind a number.
- */
-export function Bar({ value, max = 1, tone = 'var(--ink-2)', height = 4, label }) {
+/** A proportion, drawn as a rounded pill track and fill. */
+export function Bar({ value, max = 1, tone = 'var(--ink-2)', height = 6, label }) {
   const pct = Math.max(0, Math.min(1, value / (max || 1))) * 100;
   return (
     <span className="flex items-center gap-2">
       <span
-        className="relative block flex-1 border-b border-[var(--rule)]"
-        style={{ height }}
+        className="relative block flex-1 overflow-hidden rounded-full"
+        style={{ height, background: 'var(--sheet-sunk)' }}
         role="img"
         aria-label={label ?? `${Math.round(pct)}%`}
       >
         {/* scaleX, not width — these bars re-render on every drag of the
             severity weights, and width would relayout the row each time. */}
         <span
-          className="absolute inset-y-0 left-0 block w-full origin-left"
+          className="absolute inset-y-0 left-0 block w-full origin-left rounded-full"
           style={{
             background: tone,
             transform: `scaleX(${pct / 100})`,
@@ -248,10 +241,7 @@ export function bandColour(band) {
 /* Notices                                                             */
 /* ------------------------------------------------------------------ */
 
-/**
- * A marginal note, in the register's own voice. Uses a 1px rule and a drawn
- * mark rather than a coloured slab, so it does not shout over live data.
- */
+/** A soft, tinted callout — reads clearly without shouting over live data. */
 export function Note({ tone = 'info', children, icon = 'alert' }) {
   const colour = {
     info: 'var(--ink-3)',
@@ -262,10 +252,10 @@ export function Note({ tone = 'info', children, icon = 'alert' }) {
   }[tone];
   return (
     <p
-      className="flex items-start gap-2 border-l px-3 py-2 text-[0.75rem] leading-[1.5]"
-      style={{ borderLeftColor: colour, color: 'var(--ink-2)' }}
+      className="flex items-start gap-2.5 rounded-(--radius) px-3.5 py-3 text-[0.75rem] leading-[1.55]"
+      style={{ background: `color-mix(in srgb, ${colour} 9%, transparent)`, color: 'var(--ink-2)' }}
     >
-      <Icon name={icon} size={12} className="mt-[0.15rem] shrink-0" style={{ color: colour }} />
+      <Icon name={icon} size={13} className="mt-[0.1rem] shrink-0" style={{ color: colour }} />
       <span>{children}</span>
     </p>
   );
@@ -273,9 +263,14 @@ export function Note({ tone = 'info', children, icon = 'alert' }) {
 
 export function Empty({ title, children, icon = 'file' }) {
   return (
-    <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
-      <Icon name={icon} size={22} style={{ color: 'var(--ink-3)' }} />
-      <p className="font-[family-name:var(--font-narrow)] text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-[var(--ink-2)]">
+    <div className="flex flex-col items-center gap-3 px-4 py-12 text-center">
+      <span
+        className="flex h-11 w-11 items-center justify-center rounded-full"
+        style={{ background: 'var(--sheet-sunk)' }}
+      >
+        <Icon name={icon} size={20} style={{ color: 'var(--ink-3)' }} />
+      </span>
+      <p className="font-[family-name:var(--font-narrow)] text-[0.8125rem] font-semibold text-[var(--ink-2)]">
         {title}
       </p>
       {children ? <p className="max-w-[46ch] text-[0.75rem] leading-[1.5] text-[var(--ink-3)]">{children}</p> : null}
@@ -283,12 +278,12 @@ export function Empty({ title, children, icon = 'file' }) {
   );
 }
 
-/** Loading, in the register's voice — a drawn rule, not a spinner. */
+/** Loading state — a soft pulse, not a spinner. */
 export function Working({ label = 'Working' }) {
   return (
-    <div className="flex items-center gap-2 px-3 py-2">
-      <span className="rule-draw block h-px w-8" style={{ background: 'var(--stamp)' }} />
-      <span className="font-[family-name:var(--font-narrow)] text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-[var(--ink-3)]">
+    <div className="flex items-center gap-2.5 px-4 py-3">
+      <span className="pulse block h-2 w-2 shrink-0 rounded-full" style={{ background: 'var(--stamp)' }} />
+      <span className="font-[family-name:var(--font-narrow)] text-[0.75rem] font-semibold text-[var(--ink-3)]">
         {label}
       </span>
     </div>
