@@ -1,0 +1,53 @@
+name: Build AEGIS Field APK
+
+# Builds an installable Android APK of the Flutter field app on every push
+# that touches mobile/, and on demand. No local Flutter install needed to
+# get a device-ready build — download the artifact from this run.
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - "mobile/**"
+      - ".github/workflows/build-apk.yml"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Backfill the native Android runner
+        # android/ is gitignored (see mobile/.gitignore) since it's
+        # regeneratable boilerplate. Safe to run against an existing
+        # lib/ + pubspec.yaml — see mobile/README.md.
+        run: flutter create --platforms=android .
+
+      - name: Enable Java 8+ desugaring (flutter_local_notifications requirement)
+        # The freshly-scaffolded template doesn't turn this on, and the
+        # notifications plugin needs it below API 26. Patches whichever
+        # Gradle DSL the installed Flutter's template used.
+        run: python3 ../.github/workflows/patch_android_desugaring.py
+
+      - run: flutter pub get
+
+      - run: flutter test
+
+      - run: flutter analyze --no-fatal-infos
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aegis-field-apk
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
