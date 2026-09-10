@@ -119,7 +119,10 @@ class TerrainBand {
 }
 
 class Terrain {
-  const Terrain({
+  // Not const: _byId and _bridgeByZone below are late final fields computed
+  // from zones/bridges at construction time, which a const constructor
+  // cannot allow.
+  Terrain({
     required this.fileNo,
     required this.incidentName,
     required this.district,
