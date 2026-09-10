@@ -2,7 +2,7 @@ services:
   - type: web
     name: aegis-vision
     runtime: python
-    plan: starter
+    plan: free
     rootDir: services/vision
     buildCommand: >-
       pip install --upgrade pip &&
